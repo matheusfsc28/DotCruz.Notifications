@@ -15,22 +15,18 @@ public static class DependencyInjection
 
     private static void AddMongoDb(IServiceCollection services, IConfiguration configuration)
     {
-        // 1. Configurar Mapeamentos e Convenções
         MongoDbMappings.Configure();
 
-        // 2. Extrair Configurações para o Driver
         var mongoDbSection = configuration.GetSection("MongoDbSettings");
         var settings = mongoDbSection.Get<MongoDbSettings>() 
                        ?? throw new InvalidOperationException("MongoDbSettings section is missing in configuration.");
 
         services.Configure<MongoDbSettings>(mongoDbSection);
 
-        // 3. Registrar o MongoClient como Singleton (Fundamental para o Driver gerenciar o Pool)
         services.AddSingleton<IMongoClient>(sp =>
         {
             var mongoClientSettings = MongoClientSettings.FromConnectionString(settings.ConnectionString);
             
-            // Configurações Recomendadas para Performance/Resiliência
             mongoClientSettings.RetryWrites = true;
             mongoClientSettings.RetryReads = true;
             mongoClientSettings.MaxConnectionPoolSize = 100;
@@ -39,7 +35,6 @@ public static class DependencyInjection
             return new MongoClient(mongoClientSettings);
         });
 
-        // 4. Registrar o Contexto
         services.AddSingleton<NotificationDbContext>();
     }
 }
