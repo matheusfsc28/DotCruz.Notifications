@@ -1,0 +1,11 @@
+﻿namespace DotCruz.Notifications.Domain.Entities.Base;
+
+public abstract class BaseEntity
+{
+    public Guid Id { get; private init; } = Guid.NewGuid();
+    public DateTimeOffset CreatedAt { get; private init; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset UpdatedAt { get; private set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset? DeletedAt { get; private set; }
+    public void Touch() => UpdatedAt = DateTimeOffset.UtcNow;
+    public void Delete() => DeletedAt = DateTimeOffset.UtcNow;
+}

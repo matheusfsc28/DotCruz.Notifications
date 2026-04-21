@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -15,15 +15,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="8.0.1">
+    <PackageReference Include="coverlet.collector" Version="10.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DotCruz.Notification.Domain\DotCruz.Notification.Domain.csproj" />
-    <ProjectReference Include="..\..\src\DotCruz.Notification.Exceptions\DotCruz.Notification.Exceptions.csproj" />
+    <ProjectReference Include="..\..\src\DotCruz.Notifications.Domain\DotCruz.Notifications.Domain.csproj" />
+    <ProjectReference Include="..\..\src\DotCruz.Notifications.Exceptions\DotCruz.Notifications.Exceptions.csproj" />
     <ProjectReference Include="..\CommonTestUtilities\CommonTestUtilities.csproj" />
   </ItemGroup>
 

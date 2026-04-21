@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DotCruz.Notifications.Application/DotCruz.Notifications.Application.csproj" />
+    <Project Path="src/DotCruz.Notifications.Domain/DotCruz.Notifications.Domain.csproj" />
+    <Project Path="src/DotCruz.Notifications.Exceptions/DotCruz.Notifications.Exceptions.csproj" Id="82494e07-9beb-4da1-a0a6-5ed59b160139" />
+    <Project Path="src/DotCruz.Notifications.Infrastructure/DotCruz.Notifications.Infrastructure.csproj" Id="8bf7a457-91ad-4986-9c6f-b48928da1aae" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CommonTestUtilities/CommonTestUtilities.csproj" Id="7256ea07-69e2-4076-8047-033cb2f47833" />
+    <Project Path="tests/Domain.Test/Domain.Test.csproj" Id="775e85b5-fa0d-40ad-9a4a-d3e371759734" />
+  </Folder>
+</Solution>

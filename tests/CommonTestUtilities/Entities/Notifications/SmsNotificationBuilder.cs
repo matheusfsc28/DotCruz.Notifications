@@ -1,5 +1,5 @@
 using Bogus;
-using DotCruz.Notification.Domain.Entities.Notifications;
+using DotCruz.Notifications.Domain.Entities.Notifications;
 
 namespace CommonTestUtilities.Entities.Notifications;
 

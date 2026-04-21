@@ -1,6 +1,6 @@
 using Bogus;
-using DotCruz.Notification.Domain.Entities.Templates;
-using DotCruz.Notification.Domain.Enums.Notifications;
+using DotCruz.Notifications.Domain.Entities.Templates;
+using DotCruz.Notifications.Domain.Enums.Notifications;
 
 namespace CommonTestUtilities.Entities.Templates;
 
