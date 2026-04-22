@@ -1,10 +1,12 @@
+using DotCruz.Notifications.CrossCutting.Settings;
 using DotCruz.Notifications.Domain.Interfaces;
-using DotCruz.Notifications.Infrastructure.Messaging;
 using DotCruz.Notifications.Infrastructure.DataAccess;
 using DotCruz.Notifications.Infrastructure.DataAccess.Mappings;
+using DotCruz.Notifications.Infrastructure.Services.Messaging;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace DotCruz.Notifications.Infrastructure;
@@ -13,21 +15,24 @@ public static class DependencyInjection
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        AddMongoDb(services, configuration);
         AddMassTransit(services, configuration);
-        
+        AddExternalServices(services, configuration);
+        AddMongoDb(services, configuration);
+    }
+
+    private static void AddExternalServices(IServiceCollection services, IConfiguration configuration)
+    {
         services.AddScoped<IPublishNotificationService, PublishNotificationService>();
     }
 
     private static void AddMassTransit(IServiceCollection services, IConfiguration configuration)
     {
-        var rabbitMqSettings = configuration.GetSection("RabbitMqSettings").Get<RabbitMqSettings>()
-            ?? throw new InvalidOperationException("RabbitMqSettings section is missing in configuration.");
-
         services.AddMassTransit(busConfigurator =>
         {
             busConfigurator.UsingRabbitMq((context, cfg) =>
             {
+                var rabbitMqSettings = context.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
+
                 cfg.Host(rabbitMqSettings.Host, (ushort)rabbitMqSettings.Port, "/", h =>
                 {
                     h.Username(rabbitMqSettings.Username);
@@ -43,16 +48,10 @@ public static class DependencyInjection
     {
         MongoDbMappings.Configure();
 
-        var mongoDbSection = configuration.GetSection("MongoDbSettings");
-        var settings = mongoDbSection.Get<MongoDbSettings>() 
-                       ?? throw new InvalidOperationException("MongoDbSettings section is missing in configuration.");
-
-        services.Configure<MongoDbSettings>(mongoDbSection);
-
         services.AddSingleton<IMongoClient>(sp =>
         {
-            var mongoClientSettings = MongoClientSettings.FromConnectionString(settings.ConnectionString);
-            
+            var mongoClientSettings = MongoClientSettings.FromConnectionString(configuration.GetConnectionString("MongoDb"));
+
             mongoClientSettings.RetryWrites = true;
             mongoClientSettings.RetryReads = true;
             mongoClientSettings.MaxConnectionPoolSize = 100;

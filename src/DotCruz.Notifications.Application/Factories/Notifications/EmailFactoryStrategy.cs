@@ -2,7 +2,7 @@ using DotCruz.Notifications.Domain.Entities.Notifications;
 using DotCruz.Notifications.Domain.Enums.Notifications;
 using DotCruz.Notifications.Domain.Interfaces;
 
-namespace DotCruz.Notifications.Application.Notifications.Factories;
+namespace DotCruz.Notifications.Application.Factories.Notifications;
 
 public class EmailFactoryStrategy : INotificationFactoryStrategy
 {

@@ -1,7 +1,7 @@
 using FluentValidation;
 using DotCruz.Notifications.Exceptions;
 
-namespace DotCruz.Notifications.Application.UseCases.Notification.CreateNotification;
+namespace DotCruz.Notifications.Application.UseCases.Notifications.CreateNotification;
 
 public class CreateNotificationCommandValidator : AbstractValidator<CreateNotificationCommand>
 {

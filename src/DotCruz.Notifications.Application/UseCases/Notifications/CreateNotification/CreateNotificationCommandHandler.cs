@@ -1,7 +1,8 @@
 using DotCruz.Notifications.Domain.Interfaces;
+using DotCruz.Notifications.Domain.Interfaces.Repositories;
 using MediatR;
 
-namespace DotCruz.Notifications.Application.UseCases.Notification.CreateNotification;
+namespace DotCruz.Notifications.Application.UseCases.Notifications.CreateNotification;
 
 public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificationCommand, Guid>
 {
@@ -36,7 +37,7 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
 
         await _repository.AddAsync(notification, cancellationToken);
         
-        await _publishService.PublishAsync(notification, cancellationToken);
+        await _publishService.PublishNotificationCreatedEvent(notification, cancellationToken);
 
         return notification.Id;
     }

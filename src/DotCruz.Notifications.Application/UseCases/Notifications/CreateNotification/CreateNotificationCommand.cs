@@ -1,7 +1,7 @@
 using DotCruz.Notifications.Domain.Enums.Notifications;
 using MediatR;
 
-namespace DotCruz.Notifications.Application.UseCases.Notification.CreateNotification;
+namespace DotCruz.Notifications.Application.UseCases.Notifications.CreateNotification;
 
 public record CreateNotificationCommand : IRequest<Guid>
 {

@@ -2,11 +2,11 @@ using DotCruz.Notifications.Domain.Entities.Notifications;
 using DotCruz.Notifications.Domain.Enums.Notifications;
 using DotCruz.Notifications.Domain.Interfaces;
 
-namespace DotCruz.Notifications.Application.Notifications.Factories;
+namespace DotCruz.Notifications.Application.Factories.Notifications;
 
-public class SmsFactoryStrategy : INotificationFactoryStrategy
+public class PushFactoryStrategy : INotificationFactoryStrategy
 {
-    public NotificationType Type => NotificationType.Sms;
+    public NotificationType Type => NotificationType.Push;
 
     public Notification Create(
         Guid serviceId,
@@ -18,10 +18,11 @@ public class SmsFactoryStrategy : INotificationFactoryStrategy
         Dictionary<string, object>? templateData,
         DateTimeOffset? scheduledFor)
     {
-        return new SmsNotification(
+        return new PushNotification(
             serviceId,
             recipient,
             culture,
+            subject ?? string.Empty,
             body,
             templateId,
             templateData,

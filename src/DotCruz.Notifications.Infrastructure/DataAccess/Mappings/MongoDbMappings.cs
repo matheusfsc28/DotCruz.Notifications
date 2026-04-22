@@ -5,7 +5,6 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
-using DotCruz.Notifications.Domain.Entities.Notifications;
 
 namespace DotCruz.Notifications.Infrastructure.DataAccess.Mappings;
 

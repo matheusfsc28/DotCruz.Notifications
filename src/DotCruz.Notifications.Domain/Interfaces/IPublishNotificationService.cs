@@ -4,5 +4,5 @@ namespace DotCruz.Notifications.Domain.Interfaces;
 
 public interface IPublishNotificationService
 {
-    Task PublishAsync(Notification notification, CancellationToken cancellationToken = default);
+    Task PublishNotificationCreatedEvent(Notification notification, CancellationToken cancellationToken);
 }

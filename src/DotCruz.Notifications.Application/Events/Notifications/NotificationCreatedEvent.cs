@@ -1,4 +1,4 @@
-namespace DotCruz.Notifications.Application.Notifications.Events;
+namespace DotCruz.Notifications.Application.Events.Notifications;
 
 public record NotificationCreatedEvent
 {

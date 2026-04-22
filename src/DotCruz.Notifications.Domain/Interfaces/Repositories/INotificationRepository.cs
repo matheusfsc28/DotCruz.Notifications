@@ -1,6 +1,6 @@
 using DotCruz.Notifications.Domain.Entities.Notifications;
 
-namespace DotCruz.Notifications.Domain.Interfaces;
+namespace DotCruz.Notifications.Domain.Interfaces.Repositories;
 
 public interface INotificationRepository
 {

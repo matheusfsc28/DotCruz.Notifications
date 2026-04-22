@@ -2,6 +2,7 @@ using DotCruz.Notifications.Domain.Entities.Templates;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using DotCruz.Notifications.Domain.Entities.Notifications;
+using DotCruz.Notifications.CrossCutting.Settings;
 
 namespace DotCruz.Notifications.Infrastructure.DataAccess;
 
