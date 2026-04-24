@@ -3,15 +3,14 @@ using MediatR;
 
 namespace DotCruz.Notifications.Application.UseCases.Notifications.CreateNotification;
 
-public record CreateNotificationCommand : IRequest<Guid>
-{
-    public Guid ServiceId { get; init; }
-    public NotificationType Type { get; init; }
-    public string Recipient { get; init; } = string.Empty;
-    public string? Culture { get; init; }
-    public string? Body { get; init; }
-    public string? Subject { get; init; }
-    public Guid? TemplateId { get; init; }
-    public Dictionary<string, object>? TemplateData { get; init; }
-    public DateTimeOffset? ScheduledFor { get; init; }
-}
+public record CreateNotificationCommand(
+    Guid ServiceId,
+    NotificationType Type,
+    string Recipient,
+    string? Culture = null,
+    string? Body = null,
+    string? Subject = null,
+    Guid? TemplateId = null,
+    Dictionary<string, object>? TemplateData = null,
+    DateTimeOffset? ScheduledFor = null
+) : IRequest<Guid>;
