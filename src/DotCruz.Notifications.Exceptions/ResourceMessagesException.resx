@@ -159,4 +159,7 @@
   <data name="NOTIFICATION_TYPE_NOT_SUPPORTED" xml:space="preserve">
     <value>The notification type is not supported.</value>
   </data>
+  <data name="NOTIFICATION_TYPE_INVALID" xml:space="preserve">
+    <value>The notification type is invalid.</value>
+  </data>
 </root>

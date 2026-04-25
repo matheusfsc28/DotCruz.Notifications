@@ -16,7 +16,8 @@ public class CreateNotificationCommandValidator : AbstractValidator<CreateNotifi
             .WithMessage(ResourceMessagesException.RECIPIENT_EMPTY);
 
         RuleFor(x => x.Type)
-            .IsInEnum();
+            .IsInEnum()
+            .WithMessage(ResourceMessagesException.NOTIFICATION_TYPE_INVALID);
 
         RuleFor(x => x)
             .Must(x => !string.IsNullOrWhiteSpace(x.Body) || x.TemplateId.HasValue)

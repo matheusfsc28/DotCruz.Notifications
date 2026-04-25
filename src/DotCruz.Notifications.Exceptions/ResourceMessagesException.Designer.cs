@@ -131,9 +131,8 @@ namespace DotCruz.Notifications.Exceptions {
                 return ResourceManager.GetString("NOTIFICATION_ID_EMPTY", resourceCulture);
             }
         }
-        
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a The notification type is not supported.
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The notification type is not supported..
         /// </summary>
         public static string NOTIFICATION_TYPE_NOT_SUPPORTED {
             get {
@@ -141,6 +140,15 @@ namespace DotCruz.Notifications.Exceptions {
             }
         }
 
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The notification type is invalid..
+        /// </summary>
+        public static string NOTIFICATION_TYPE_INVALID {
+            get {
+                return ResourceManager.GetString("NOTIFICATION_TYPE_INVALID", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The recipient cannot be null..
         /// </summary>
