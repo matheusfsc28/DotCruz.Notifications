@@ -48,6 +48,11 @@ public abstract class Notification : BaseEntity
         Validate();
     }
 
+    public void MarkAsProcessing()
+    {
+        Status = NotificationStatus.Processing;
+    }
+
     public void RegisterFailure(string? errorMessage)
     {
         var errorDetail = !string.IsNullOrEmpty(errorMessage) ? errorMessage : ResourceMessagesException.UNKNOWN_ERROR;

@@ -38,7 +38,8 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
 
         await _repository.AddAsync(notification, cancellationToken);
         
-        await _publishService.PublishNotificationCreatedEvent(notification, cancellationToken);
+        if (notification.ScheduledFor == null || notification.ScheduledFor <= DateTimeOffset.UtcNow)
+            await _publishService.PublishNotificationCreatedEvent(notification, cancellationToken);
 
         return notification.Id;
     }

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-DotCruz.Notifications.Worker-12345</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit.RabbitMQ" Version="9.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotCruz.Notifications.Application\DotCruz.Notifications.Application.csproj" />
+    <ProjectReference Include="..\DotCruz.Notifications.CrossCutting\DotCruz.Notifications.CrossCutting.csproj" />
+    <ProjectReference Include="..\DotCruz.Notifications.Domain\DotCruz.Notifications.Domain.csproj" />
+    <ProjectReference Include="..\DotCruz.Notifications.Infrastructure\DotCruz.Notifications.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DotCruz.Notifications.Domain\DotCruz.Notifications.Domain.csproj" />
     <ProjectReference Include="..\DotCruz.Notifications.Exceptions\DotCruz.Notifications.Exceptions.csproj" />
+    <ProjectReference Include="..\DotCruz.Notifications.CrossCutting\DotCruz.Notifications.CrossCutting.csproj" />
   </ItemGroup>
 
   <ItemGroup>

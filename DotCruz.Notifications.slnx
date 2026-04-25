@@ -5,6 +5,7 @@
     <Project Path="src/DotCruz.Notifications.Domain/DotCruz.Notifications.Domain.csproj" />
     <Project Path="src/DotCruz.Notifications.Exceptions/DotCruz.Notifications.Exceptions.csproj" Id="82494e07-9beb-4da1-a0a6-5ed59b160139" />
     <Project Path="src/DotCruz.Notifications.Infrastructure/DotCruz.Notifications.Infrastructure.csproj" Id="8bf7a457-91ad-4986-9c6f-b48928da1aae" />
+    <Project Path="src/DotCruz.Notifications.Worker/DotCruz.Notifications.Worker.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/CommonTestUtilities/CommonTestUtilities.csproj" Id="7256ea07-69e2-4076-8047-033cb2f47833" />

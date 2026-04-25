@@ -1,4 +1,5 @@
 using DotCruz.Notifications.Domain.Entities.Notifications;
+using DotCruz.Notifications.Domain.Enums.Notifications;
 using DotCruz.Notifications.Domain.Interfaces.Repositories;
 using MongoDB.Driver;
 
@@ -23,6 +24,16 @@ public class NotificationRepository : INotificationRepository
         return await _context.Notifications
             .Find(n => n.Id == id)
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<Notification>> GetPendingScheduledAsync(DateTimeOffset referenceDate, int limit, CancellationToken cancellationToken)
+    {
+        return await _context.Notifications
+            .Find(n => n.Status == NotificationStatus.Pending && 
+                       n.ScheduledFor != null && 
+                       n.ScheduledFor <= referenceDate)
+            .Limit(limit)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task UpdateAsync(Notification notification, CancellationToken cancellationToken)

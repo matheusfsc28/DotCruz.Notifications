@@ -16,9 +16,6 @@ public class PublishNotificationService : IPublishNotificationService
 
     public async Task PublishNotificationCreatedEvent(Notification notification, CancellationToken cancellationToken)
     {
-        await _publishEndpoint.Publish(new NotificationCreatedEvent
-        {
-            NotificationId = notification.Id
-        }, cancellationToken);
+        await _publishEndpoint.Publish(new NotificationCreatedEvent(notification.Id), cancellationToken);
     }
 }

@@ -5,6 +5,7 @@ using DotCruz.Notifications.Infrastructure.DataAccess;
 using DotCruz.Notifications.Infrastructure.DataAccess.Mappings;
 using DotCruz.Notifications.Infrastructure.DataAccess.Repositories;
 using DotCruz.Notifications.Infrastructure.Services.Messaging;
+using DotCruz.Notifications.Infrastructure.Services.Senders;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +33,10 @@ public static class DependencyInjection
     private static void AddExternalServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IPublishNotificationService, PublishNotificationService>();
+        
+        services.AddScoped<INotificationSenderStrategy, EmailSenderStrategy>();
+        services.AddScoped<INotificationSenderStrategy, SmsSenderStrategy>();
+        services.AddScoped<INotificationSenderStrategy, PushSenderStrategy>();
     }
 
     private static void AddMassTransit(IServiceCollection services, IConfiguration configuration)
