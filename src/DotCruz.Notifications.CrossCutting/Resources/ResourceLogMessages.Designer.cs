@@ -70,6 +70,15 @@ namespace DotCruz.Notifications.CrossCutting.Resources {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Consuming CreateNotificationCommand for recipient: {0}.
+        /// </summary>
+        public static string CONSUMING_CREATE_NOTIFICATION {
+            get {
+                return ResourceManager.GetString("CONSUMING_CREATE_NOTIFICATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Error occurred while polling scheduled notifications..
         /// </summary>
         public static string ERROR_POLLING_NOTIFICATIONS {

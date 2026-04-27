@@ -88,4 +88,7 @@
   <data name="CONSUMING_NOTIFICATION" xml:space="preserve">
     <value>Consuming notification {0}</value>
   </data>
+  <data name="CONSUMING_CREATE_NOTIFICATION" xml:space="preserve">
+    <value>Consuming CreateNotificationCommand for recipient: {0}</value>
+  </data>
 </root>

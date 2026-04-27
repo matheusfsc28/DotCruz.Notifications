@@ -13,7 +13,7 @@ public class CreateNotificationCommandValidatorTests
         var validator = new CreateNotificationCommandValidator();
         var request = CreateNotificationCommandBuilder.Build();
 
-        var result = await validator.ValidateAsync(request);
+        var result = await validator.ValidateAsync(request, TestContext.Current.CancellationToken);
 
         Assert.True(result.IsValid);
     }
@@ -24,7 +24,7 @@ public class CreateNotificationCommandValidatorTests
         var validator = new CreateNotificationCommandValidator();
         var request = CreateNotificationCommandBuilder.Build(body: string.Empty, templateId: Guid.NewGuid());
 
-        var result = await validator.ValidateAsync(request);
+        var result = await validator.ValidateAsync(request, TestContext.Current.CancellationToken);
 
         Assert.True(result.IsValid);
     }
@@ -35,7 +35,7 @@ public class CreateNotificationCommandValidatorTests
         var validator = new CreateNotificationCommandValidator();
         var request = CreateNotificationCommandBuilder.Build(serviceId: Guid.Empty);
 
-        var result = await validator.ValidateAsync(request);
+        var result = await validator.ValidateAsync(request, TestContext.Current.CancellationToken);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => e.ErrorMessage.Equals(ResourceMessagesException.SERVICE_ID_EMPTY));
@@ -47,7 +47,7 @@ public class CreateNotificationCommandValidatorTests
         var validator = new CreateNotificationCommandValidator();
         var request = CreateNotificationCommandBuilder.Build(recipient: string.Empty);
 
-        var result = await validator.ValidateAsync(request);
+        var result = await validator.ValidateAsync(request, TestContext.Current.CancellationToken);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => e.ErrorMessage.Equals(ResourceMessagesException.RECIPIENT_EMPTY));
@@ -59,7 +59,7 @@ public class CreateNotificationCommandValidatorTests
         var validator = new CreateNotificationCommandValidator();
         var request = CreateNotificationCommandBuilder.Build(type: (NotificationType)999);
 
-        var result = await validator.ValidateAsync(request);
+        var result = await validator.ValidateAsync(request, TestContext.Current.CancellationToken);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => e.ErrorMessage.Equals(ResourceMessagesException.NOTIFICATION_TYPE_INVALID));
@@ -71,7 +71,7 @@ public class CreateNotificationCommandValidatorTests
         var validator = new CreateNotificationCommandValidator();
         var request = CreateNotificationCommandBuilder.Build(body: string.Empty, templateId: null);
 
-        var result = await validator.ValidateAsync(request);
+        var result = await validator.ValidateAsync(request, TestContext.Current.CancellationToken);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => e.ErrorMessage.Equals(ResourceMessagesException.BODY_OR_TEMPLATE_REQUIRED));

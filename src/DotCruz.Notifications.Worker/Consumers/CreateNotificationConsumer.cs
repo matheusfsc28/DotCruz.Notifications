@@ -18,8 +18,8 @@ public class CreateNotificationConsumer : IConsumer<CreateNotificationCommand>
 
     public async Task Consume(ConsumeContext<CreateNotificationCommand> context)
     {
-        _logger.LogInformation("Consuming CreateNotificationCommand for recipient: {Recipient}", context.Message.Recipient);
-        
+        _logger.LogInformation(ResourceLogMessages.CONSUMING_CREATE_NOTIFICATION, context.Message.Recipient);
+
         await _mediator.Send(context.Message);
     }
 }
