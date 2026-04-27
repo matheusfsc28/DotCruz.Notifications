@@ -1,6 +1,7 @@
 ﻿using DotCruz.Notifications.Application.Common.Behaviors;
 using DotCruz.Notifications.Application.Common.Services;
 using DotCruz.Notifications.Domain.Interfaces;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -11,6 +12,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         AddMediatR(services);
+        AddValidators(services);
         AddServices(services);
 
         return services;
@@ -21,9 +23,15 @@ public static class DependencyInjection
         services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
                 cfg.AddOpenBehavior(typeof(NotificationFailureBehavior<,>));
             }
         );
+    }
+
+    private static void AddValidators(IServiceCollection services)
+    {
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
     private static void AddServices(IServiceCollection services)
