@@ -25,12 +25,11 @@ public class NotificationFailureBehavior<TRequest, TResponse> : IPipelineBehavio
     {
         try
         {
-            return await next();
+            return await next(cancellationToken);
         }
-        catch (NotificationException)
+        catch (NotificationException ex)
         {
-            // Exceções de domínio/validação não devem registrar falha de envio técnica aqui, 
-            // pois geralmente são tratadas por um ExceptionFilter global na API.
+            _logger.LogWarning(ex, ResourceLogMessages.ERROR_SENDING_NOTIFICATION, request.NotificationId);
             throw;
         }
         catch (Exception ex)
@@ -45,7 +44,7 @@ public class NotificationFailureBehavior<TRequest, TResponse> : IPipelineBehavio
                 await _notificationRepository.UpdateAsync(notification, cancellationToken);
             }
 
-            throw; // Re-throw para o MassTransit ou Caller saber que falhou
+            throw;
         }
     }
 }
