@@ -24,5 +24,16 @@ public class TemplateRepositoryBuilder
         return this;
     }
 
+    public TemplateRepositoryBuilder GetByCode(Template? template)
+    {
+        if (template is not null)
+        {
+            _repository.Setup(r => r.GetByCodeAsync(template.Code, template.Culture, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(template);
+        }
+
+        return this;
+    }
+
     public ITemplateRepository Build() => _repository.Object;
 }

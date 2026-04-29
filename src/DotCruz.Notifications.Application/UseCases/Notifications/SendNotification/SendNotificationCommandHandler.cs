@@ -1,3 +1,4 @@
+using DotCruz.Notifications.Application.Common.Utils;
 using DotCruz.Notifications.CrossCutting.Resources;
 using DotCruz.Notifications.Domain.Enums.Notifications;
 using DotCruz.Notifications.Domain.Interfaces;
@@ -75,6 +76,10 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
         if (!string.IsNullOrEmpty(content))
         {
             var renderedBody = _templateEngine.Render(content, notification.TemplateData);
+
+            if (notification.Type == NotificationType.Email)
+                renderedBody = EmailTemplateWrapper.Wrap(renderedBody);
+
             notification.SetRenderedBody(renderedBody);
         }
     }

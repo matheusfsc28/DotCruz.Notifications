@@ -165,4 +165,10 @@
   <data name="NOTIFICATION_NOT_FOUND" xml:space="preserve">
     <value>Não foi possível encontrar a notificação.</value>
   </data>
+  <data name="TEMPLATE_NOT_FOUND" xml:space="preserve">
+    <value>O template não pôde ser encontrado.</value>
+  </data>
+  <data name="TEMPLATE_ALREADY_EXISTS" xml:space="preserve">
+    <value>Já existe um template com este código e idioma.</value>
+  </data>
 </root>

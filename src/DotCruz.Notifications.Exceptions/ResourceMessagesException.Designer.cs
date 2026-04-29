@@ -160,6 +160,24 @@ namespace DotCruz.Notifications.Exceptions {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A template with this code and culture already exists..
+        /// </summary>
+        public static string TEMPLATE_ALREADY_EXISTS {
+            get {
+                return ResourceManager.GetString("TEMPLATE_ALREADY_EXISTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The template could not be found..
+        /// </summary>
+        public static string TEMPLATE_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("TEMPLATE_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The recipient cannot be null..
         /// </summary>
         public static string RECIPIENT_EMPTY {

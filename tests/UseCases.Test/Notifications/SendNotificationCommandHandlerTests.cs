@@ -47,7 +47,17 @@ public class SendNotificationCommandHandlerTests
         await handler.Handle(command, TestContext.Current.CancellationToken);
 
         Assert.Equal(NotificationStatus.Sent, notification.Status);
-        Assert.Equal("Rendered Body", notification.Body);
+
+        if (type == NotificationType.Email)
+        {
+            Assert.Contains("Rendered Body", notification.Body);
+            Assert.Contains("DotCruz Notifications", notification.Body);
+        }
+        else
+        {
+            Assert.Equal("Rendered Body", notification.Body);
+        }
+
         Mock.Get(sender).Verify(s => s.SendAsync(notification, It.IsAny<CancellationToken>()), Times.Once);
         Mock.Get(notificationRepository).Verify(r => r.UpdateAsync(notification, It.IsAny<CancellationToken>()), Times.AtLeastOnce);
     }
@@ -79,8 +89,47 @@ public class SendNotificationCommandHandlerTests
         await handler.Handle(command, TestContext.Current.CancellationToken);
 
         Assert.Equal(NotificationStatus.Sent, notification.Status);
-        Assert.Equal("Rendered Body", notification.Body);
+
+        if (type == NotificationType.Email)
+        {
+            Assert.Contains("Rendered Body", notification.Body);
+            Assert.Contains("DotCruz Notifications", notification.Body);
+        }
+        else
+        {
+            Assert.Equal("Rendered Body", notification.Body);
+        }
+
         Mock.Get(sender).Verify(s => s.SendAsync(notification, It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Success_Email_WrapsContent()
+    {
+        var type = NotificationType.Email;
+        var notification = NotificationBuilder.Build(type, body: "Content");
+        var command = SendNotificationCommandBuilder.Build(notification.Id);
+
+        var notificationRepository = new NotificationRepositoryBuilder()
+            .GetById(notification)
+            .Build();
+
+        var templateEngine = new TemplateEngineBuilder()
+            .Render("Rendered Content")
+            .Build();
+
+        var sender = new NotificationSenderStrategyBuilder(type).Build();
+        var senders = new NotificationSenderStrategyListBuilder()
+            .Add(sender)
+            .Build();
+
+        var handler = CreateHandler(notificationRepository: notificationRepository, templateEngine: templateEngine, senders: senders);
+
+        await handler.Handle(command, TestContext.Current.CancellationToken);
+
+        Assert.Contains("DotCruz Notifications", notification.Body);
+        Assert.Contains("Rendered Content", notification.Body);
+        Assert.Contains("Todos os direitos reservados", notification.Body);
     }
 
     [Fact]

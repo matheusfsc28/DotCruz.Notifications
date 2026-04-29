@@ -21,14 +21,14 @@ public class TemplateRepository : ITemplateRepository
     public async Task<Template?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _context.Templates
-            .Find(t => t.Id == id)
+            .Find(t => t.Id == id && t.DeletedAt == null)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<Template?> GetByCodeAsync(string code, string culture, CancellationToken cancellationToken)
     {
         return await _context.Templates
-            .Find(t => t.Code == code && t.Culture == culture)
+            .Find(t => t.Code == code && t.Culture == culture && t.DeletedAt == null)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
