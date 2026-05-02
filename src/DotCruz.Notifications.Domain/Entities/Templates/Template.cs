@@ -9,26 +9,28 @@ public class Template : BaseEntity
 {
     public string Code { get; private set; } = string.Empty;
     public string Culture { get; private set; } = "pt-BR";
-    public string DefaultSubject { get; private set; }
+    public string DefaultTitle { get; private set; } = string.Empty;
     public string Body { get; private set; } = string.Empty;
     public NotificationType Type { get; private set; }
 
-    public Template(string code, string culture, string defaultSubject, string body, NotificationType type)
+    private Template() { }
+
+    public Template(string code, string culture, string defaultTitle, string body, NotificationType type)
     {
         Code = code;
         Culture = !string.IsNullOrEmpty(culture) ? culture : Culture;
-        DefaultSubject = defaultSubject;
+        DefaultTitle = defaultTitle;
         Body = body;
         Type = type;
 
         Validate();
     }
 
-    public void Update(string? code, string? culture, string? defaultSubject, string? body, NotificationType? type)
+    public void Update(string? code, string? culture, string? defaultTitle, string? body, NotificationType? type)
     {
         Code = !string.IsNullOrEmpty(code) ? code : Code;
         Culture = !string.IsNullOrEmpty(culture) ? culture : Culture;
-        DefaultSubject = !string.IsNullOrEmpty(defaultSubject) ? defaultSubject : DefaultSubject;
+        DefaultTitle = !string.IsNullOrEmpty(defaultTitle) ? defaultTitle : DefaultTitle;
         Body = !string.IsNullOrEmpty(body) ? body : Body;
         Type = type ?? Type;
 
@@ -45,8 +47,8 @@ public class Template : BaseEntity
         if (string.IsNullOrEmpty(Culture))
             errors.Add(ResourceMessagesException.CULTURE_EMPTY);
 
-        if (string.IsNullOrEmpty(DefaultSubject))
-            errors.Add(ResourceMessagesException.DEFAULT_SUBJECT_EMPTY);
+        if (string.IsNullOrEmpty(DefaultTitle))
+            errors.Add(ResourceMessagesException.DEFAULT_TITLE_EMPTY);
 
         if (string.IsNullOrEmpty(Body))
             errors.Add(ResourceMessagesException.BODY_EMPTY);

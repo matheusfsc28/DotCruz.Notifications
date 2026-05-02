@@ -15,9 +15,9 @@ public class CreateTemplateCommandValidator : AbstractValidator<CreateTemplateCo
             .NotEmpty()
             .WithMessage(ResourceMessagesException.CULTURE_EMPTY);
 
-        RuleFor(x => x.DefaultSubject)
+        RuleFor(x => x.DefaultTitle)
             .NotEmpty()
-            .WithMessage(ResourceMessagesException.DEFAULT_SUBJECT_EMPTY);
+            .WithMessage(ResourceMessagesException.DEFAULT_TITLE_EMPTY);
 
         RuleFor(x => x.Body)
             .NotEmpty()

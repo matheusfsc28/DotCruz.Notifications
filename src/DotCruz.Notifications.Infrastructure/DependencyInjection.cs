@@ -11,14 +11,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using System.Reflection;
 
 namespace DotCruz.Notifications.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration, Assembly? consumerAssembly = null)
     {
-        AddMassTransit(services, configuration);
+        AddMassTransit(services, configuration, consumerAssembly);
         AddExternalServices(services, configuration);
         AddMongoDb(services, configuration);
         AddRepositories(services);
@@ -39,13 +40,17 @@ public static class DependencyInjection
         services.AddScoped<INotificationSenderStrategy, PushSenderStrategy>();
     }
 
-    private static void AddMassTransit(IServiceCollection services, IConfiguration configuration)
+    private static void AddMassTransit(IServiceCollection services, IConfiguration configuration, Assembly? consumerAssembly)
     {
         services.AddMassTransit(busConfigurator =>
         {
+            if (consumerAssembly != null)
+                busConfigurator.AddConsumers(consumerAssembly);
+
             busConfigurator.UsingRabbitMq((context, cfg) =>
             {
-                var rabbitMqSettings = context.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
+                var rabbitMqSettings = configuration.GetSection("Settings:RabbitMqSettings").Get<RabbitMqSettings>()
+                ?? throw new Exception("RabbitMqSettings not found in configuration."); ;
 
                 cfg.Host(rabbitMqSettings.Host, (ushort)rabbitMqSettings.Port, "/", h =>
                 {

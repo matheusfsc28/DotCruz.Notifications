@@ -16,7 +16,7 @@ public class EmailNotificationTest
         notification.Should().NotBeNull();
         notification.ServiceId.Should().NotBeEmpty();
         notification.Recipient.Should().NotBeNullOrWhiteSpace();
-        notification.Subject.Should().NotBeNullOrWhiteSpace();
+        notification.Title.Should().NotBeNullOrWhiteSpace();
         notification.Culture.Should().NotBeNullOrWhiteSpace();
     }
 
@@ -39,12 +39,12 @@ public class EmailNotificationTest
     }
 
     [Fact]
-    public void Error_Subject_Empty()
+    public void Error_Title_Empty()
     {
-        var action = () => EmailNotificationBuilder.Build(subject: string.Empty);
+        var action = () => EmailNotificationBuilder.Build(title: string.Empty);
 
         action.Should().ThrowExactly<ErrorOnValidationException>()
-            .Where(e => e.GetErrorsMessages().Contains(ResourceMessagesException.SUBJECT_EMPTY));
+            .Where(e => e.GetErrorsMessages().Contains(ResourceMessagesException.TITLE_EMPTY));
     }
 
     [Fact]

@@ -16,7 +16,7 @@ public class TemplateTest
         template.Should().NotBeNull();
         template.Code.Should().NotBeNullOrWhiteSpace();
         template.Culture.Should().NotBeNullOrWhiteSpace();
-        template.DefaultSubject.Should().NotBeNullOrWhiteSpace();
+        template.DefaultTitle.Should().NotBeNullOrWhiteSpace();
         template.Body.Should().NotBeNullOrWhiteSpace();
     }
 
@@ -30,12 +30,12 @@ public class TemplateTest
     }
 
     [Fact]
-    public void Error_DefaultSubject_Empty()
+    public void Error_DefaultTitle_Empty()
     {
-        var action = () => TemplateBuilder.Build(defaultSubject: string.Empty);
+        var action = () => TemplateBuilder.Build(defaultTitle: string.Empty);
 
         action.Should().ThrowExactly<ErrorOnValidationException>()
-            .Where(e => e.GetErrorsMessages().Contains(ResourceMessagesException.DEFAULT_SUBJECT_EMPTY));
+            .Where(e => e.GetErrorsMessages().Contains(ResourceMessagesException.DEFAULT_TITLE_EMPTY));
     }
 
     [Fact]

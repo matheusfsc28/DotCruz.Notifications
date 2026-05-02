@@ -129,8 +129,8 @@
   <data name="ERROR_EMPTY" xml:space="preserve">
     <value>The error message cannot be null.</value>
   </data>
-  <data name="SUBJECT_EMPTY" xml:space="preserve">
-    <value>The subject cannot be null.</value>
+  <data name="TITLE_EMPTY" xml:space="preserve">
+    <value>The title cannot be null.</value>
   </data>
   <data name="BODY_OR_TEMPLATE_REQUIRED" xml:space="preserve">
     <value>It is required to provide either the message body or a valid Template for the notification.</value>
@@ -147,8 +147,8 @@
   <data name="CODE_EMPTY" xml:space="preserve">
     <value>The code cannot be empty.</value>
   </data>
-  <data name="DEFAULT_SUBJECT_EMPTY" xml:space="preserve">
-    <value>The default subject cannot be empty.</value>
+  <data name="DEFAULT_TITLE_EMPTY" xml:space="preserve">
+    <value>The default title cannot be empty.</value>
   </data>
   <data name="BODY_EMPTY" xml:space="preserve">
     <value>The body cannot be empty.</value>

@@ -97,11 +97,11 @@ namespace DotCruz.Notifications.Exceptions {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a The default subject cannot be empty..
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The default title cannot be empty..
         /// </summary>
-        public static string DEFAULT_SUBJECT_EMPTY {
+        public static string DEFAULT_TITLE_EMPTY {
             get {
-                return ResourceManager.GetString("DEFAULT_SUBJECT_EMPTY", resourceCulture);
+                return ResourceManager.GetString("DEFAULT_TITLE_EMPTY", resourceCulture);
             }
         }
         
@@ -160,24 +160,6 @@ namespace DotCruz.Notifications.Exceptions {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a A template with this code and culture already exists..
-        /// </summary>
-        public static string TEMPLATE_ALREADY_EXISTS {
-            get {
-                return ResourceManager.GetString("TEMPLATE_ALREADY_EXISTS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a The template could not be found..
-        /// </summary>
-        public static string TEMPLATE_NOT_FOUND {
-            get {
-                return ResourceManager.GetString("TEMPLATE_NOT_FOUND", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The recipient cannot be null..
         /// </summary>
         public static string RECIPIENT_EMPTY {
@@ -205,11 +187,29 @@ namespace DotCruz.Notifications.Exceptions {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a The subject cannot be null..
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A template with this code and culture already exists..
         /// </summary>
-        public static string SUBJECT_EMPTY {
+        public static string TEMPLATE_ALREADY_EXISTS {
             get {
-                return ResourceManager.GetString("SUBJECT_EMPTY", resourceCulture);
+                return ResourceManager.GetString("TEMPLATE_ALREADY_EXISTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The template could not be found..
+        /// </summary>
+        public static string TEMPLATE_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("TEMPLATE_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The title cannot be null..
+        /// </summary>
+        public static string TITLE_EMPTY {
+            get {
+                return ResourceManager.GetString("TITLE_EMPTY", resourceCulture);
             }
         }
         

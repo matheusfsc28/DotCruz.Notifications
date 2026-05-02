@@ -45,16 +45,16 @@ public class CreateTemplateCommandValidatorTests
     }
 
     [Fact]
-    public async Task Error_DefaultSubject_Empty()
+    public async Task Error_DefaultTitle_Empty()
     {
         var validator = new CreateTemplateCommandValidator();
         var request = CreateTemplateCommandBuilder.Build();
-        request = request with { DefaultSubject = string.Empty };
+        request = request with { DefaultTitle = string.Empty };
 
         var result = await validator.ValidateAsync(request, TestContext.Current.CancellationToken);
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.ErrorMessage.Equals(ResourceMessagesException.DEFAULT_SUBJECT_EMPTY));
+        Assert.Contains(result.Errors, e => e.ErrorMessage.Equals(ResourceMessagesException.DEFAULT_TITLE_EMPTY));
     }
 
     [Fact]

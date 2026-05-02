@@ -9,7 +9,7 @@ public class TemplateBuilder
     public static Template Build(
         string? code = null,
         string? culture = null,
-        string? defaultSubject = null,
+        string? defaultTitle = null,
         string? body = null,
         NotificationType? type = null)
     {
@@ -17,7 +17,7 @@ public class TemplateBuilder
             .CustomInstantiator(f => new Template(
                     code: code ?? f.Lorem.Slug(),
                     culture: culture ?? f.PickRandom("pt-BR", "en-US", "es-ES"),
-                    defaultSubject: defaultSubject ?? f.Lorem.Sentence(),
+                    defaultTitle: defaultTitle ?? f.Lorem.Sentence(),
                     body: body ?? f.Lorem.Paragraph(),
                     type: type ?? f.PickRandom<NotificationType>()
                 )

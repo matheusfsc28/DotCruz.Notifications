@@ -13,7 +13,7 @@ public class EmailFactoryStrategy : INotificationFactoryStrategy
         string recipient,
         string? culture,
         string? body,
-        string? subject,
+        string? title,
         Guid? templateId,
         Dictionary<string, object>? templateData,
         DateTimeOffset? scheduledFor)
@@ -22,7 +22,7 @@ public class EmailFactoryStrategy : INotificationFactoryStrategy
             serviceId,
             recipient,
             culture,
-            subject ?? string.Empty,
+            title ?? string.Empty,
             body,
             templateId,
             templateData,

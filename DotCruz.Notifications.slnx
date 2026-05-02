@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/DotCruz.Notifications.Api/DotCruz.Notifications.Api.csproj" Id="788cc8b1-3a69-4df9-8c6e-e008446cf45f" />
     <Project Path="src/DotCruz.Notifications.Application/DotCruz.Notifications.Application.csproj" />
     <Project Path="src/DotCruz.Notifications.CrossCutting/DotCruz.Notifications.CrossCutting.csproj" Id="d6639de8-212c-40b1-bf91-7e47dae22524" />
     <Project Path="src/DotCruz.Notifications.Domain/DotCruz.Notifications.Domain.csproj" />

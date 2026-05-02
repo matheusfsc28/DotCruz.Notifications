@@ -1,0 +1,6 @@
+@DotCruz.Notifications.Api_HostAddress = http://localhost:5076
+
+GET {{DotCruz.Notifications.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

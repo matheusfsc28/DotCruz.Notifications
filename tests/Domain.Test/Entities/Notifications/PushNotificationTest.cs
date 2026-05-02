@@ -26,6 +26,6 @@ public class PushNotificationTest
         var action = () => PushNotificationBuilder.Build(title: string.Empty);
 
         action.Should().ThrowExactly<ErrorOnValidationException>()
-            .Where(e => e.GetErrorsMessages().Contains(ResourceMessagesException.SUBJECT_EMPTY));
+            .Where(e => e.GetErrorsMessages().Contains(ResourceMessagesException.TITLE_EMPTY));
     }
 }

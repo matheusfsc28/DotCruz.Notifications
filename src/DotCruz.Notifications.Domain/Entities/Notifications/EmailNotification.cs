@@ -5,26 +5,34 @@ namespace DotCruz.Notifications.Domain.Entities.Notifications;
 
 public class EmailNotification : Notification
 {
-    public string Subject { get; private set; }
+    public string Title { get; private set; } = string.Empty;
+
+    private EmailNotification() { }
 
     public EmailNotification(
         Guid serviceId,
         string recipient,
         string? culture,
-        string subject,
+        string title,
         string? body,
         Guid? templateId,
         Dictionary<string, object>? templateData,
         DateTimeOffset? scheduledFor)
         : base(serviceId, NotificationType.Email, recipient, culture, body, templateId, templateData, scheduledFor)
     {
-        Subject = subject;
+        Title = title;
+        Validate();
+    }
+
+    public override void SetRenderedTitle(string title)
+    {
+        Title = title;
         Validate();
     }
 
     protected override void ValidateSpecificRules(List<string> errors)
     {
-        if (string.IsNullOrWhiteSpace(Subject))
-            errors.Add(ResourceMessagesException.SUBJECT_EMPTY);
+        if (string.IsNullOrWhiteSpace(Title) && TemplateId == null)
+            errors.Add(ResourceMessagesException.TITLE_EMPTY);
     }
 }

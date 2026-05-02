@@ -22,7 +22,7 @@ public class UpdateTemplateCommandHandler : IRequestHandler<UpdateTemplateComman
         template.Update(
             request.Code,
             request.Culture,
-            request.DefaultSubject,
+            request.DefaultTitle,
             request.Body,
             request.Type);
         

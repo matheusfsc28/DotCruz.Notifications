@@ -29,6 +29,8 @@ public abstract class Notification : BaseEntity
     protected bool HasBody => !string.IsNullOrWhiteSpace(Body);
     protected bool HasTemplate => TemplateId.GetValueOrDefault() != Guid.Empty;
 
+    protected Notification() { }
+
     protected Notification(Guid serviceId, NotificationType type, string recipient, string? culture, string? body, Guid? templateId, Dictionary<string, object>? templateData, DateTimeOffset? scheduledFor)
     {
         ServiceId = serviceId;
@@ -46,6 +48,8 @@ public abstract class Notification : BaseEntity
         Body = body;
         Validate();
     }
+
+    public abstract void SetRenderedTitle(string title);
 
     public void RegisterSuccess(DateTimeOffset sentAt)
     {

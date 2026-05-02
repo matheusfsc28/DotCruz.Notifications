@@ -5,6 +5,9 @@ namespace DotCruz.Notifications.Domain.Entities.Notifications;
 
 public class SmsNotification : Notification
 {
+    // For MongoDB
+    private SmsNotification() { }
+
     public SmsNotification(
         Guid serviceId,
         string phoneNumber,
@@ -17,6 +20,8 @@ public class SmsNotification : Notification
     {
         Validate();
     }
+
+    public override void SetRenderedTitle(string title) { }
 
     protected override void ValidateSpecificRules(List<string> errors) { }
 }

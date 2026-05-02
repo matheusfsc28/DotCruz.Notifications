@@ -9,7 +9,7 @@ public record CreateNotificationCommand(
     string Recipient,
     string? Culture = null,
     string? Body = null,
-    string? Subject = null,
+    string? Title = null,
     Guid? TemplateId = null,
     Dictionary<string, object>? TemplateData = null,
     DateTimeOffset? ScheduledFor = null

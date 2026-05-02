@@ -129,7 +129,7 @@
   <data name="ERROR_EMPTY" xml:space="preserve">
     <value>A mensagem de erro não pode estar vazia.</value>
   </data>
-  <data name="SUBJECT_EMPTY" xml:space="preserve">
+  <data name="TITLE_EMPTY" xml:space="preserve">
     <value>O título não pode estar vazio.</value>
   </data>
   <data name="BODY_OR_TEMPLATE_REQUIRED" xml:space="preserve">
@@ -147,7 +147,7 @@
   <data name="CODE_EMPTY" xml:space="preserve">
     <value>O código não pode estar vazio.</value>
   </data>
-  <data name="DEFAULT_SUBJECT_EMPTY" xml:space="preserve">
+  <data name="DEFAULT_TITLE_EMPTY" xml:space="preserve">
     <value>O título padrão não pode estar vazio.</value>
   </data>
   <data name="BODY_EMPTY" xml:space="preserve">

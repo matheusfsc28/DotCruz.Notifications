@@ -29,7 +29,7 @@ public class EmailSenderStrategy : INotificationSenderStrategy
     {
         var email = (EmailNotification)notification;
         
-        _logger.LogInformation(ResourceLogMessages.SENDING_EMAIL, email.Recipient, email.Subject);
+        _logger.LogInformation(ResourceLogMessages.SENDING_EMAIL, email.Recipient, email.Title);
 
         using var client = new SmtpClient(_emailSettings.Host, _emailSettings.Port)
         {
@@ -40,7 +40,7 @@ public class EmailSenderStrategy : INotificationSenderStrategy
         var mailMessage = new MailMessage
         {
             From = new MailAddress(_emailSettings.FromEmail, _emailSettings.FromName),
-            Subject = email.Subject,
+            Subject = email.Title,
             Body = email.Body ?? string.Empty,
             IsBodyHtml = true
         };

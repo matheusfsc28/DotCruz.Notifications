@@ -1,5 +1,6 @@
 using DotCruz.Notifications.Application.Common.Utils;
 using DotCruz.Notifications.CrossCutting.Resources;
+using DotCruz.Notifications.Domain.Entities.Notifications;
 using DotCruz.Notifications.Domain.Enums.Notifications;
 using DotCruz.Notifications.Domain.Interfaces;
 using DotCruz.Notifications.Domain.Interfaces.Repositories;
@@ -34,10 +35,8 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
 
     public async Task Handle(SendNotificationCommand request, CancellationToken cancellationToken)
     {
-        var notification = await _notificationRepository.GetByIdAsync(request.NotificationId, cancellationToken);
-
-        if (notification == null)
-            throw new NotFoundException(ResourceMessagesException.NOTIFICATION_NOT_FOUND);
+        var notification = await _notificationRepository.GetByIdAsync(request.NotificationId, cancellationToken)
+            ?? throw new NotFoundException(ResourceMessagesException.NOTIFICATION_NOT_FOUND);
 
         if (notification.Status == NotificationStatus.Sent || notification.Status == NotificationStatus.Processing)
         {
@@ -60,27 +59,43 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
         await _notificationRepository.UpdateAsync(notification, cancellationToken);
     }
 
-    private async Task ProcessTemplateAsync(Domain.Entities.Notifications.Notification notification, CancellationToken cancellationToken)
+    private async Task ProcessTemplateAsync(Notification notification, CancellationToken cancellationToken)
     {
-        var content = notification.Body;
+        var (rawTitle, rawBody) = await GetRawContent(notification, cancellationToken);
 
-        if (notification.TemplateId.HasValue)
+        if (!string.IsNullOrWhiteSpace(rawTitle))
         {
-            var template = await _templateRepository.GetByIdAsync(notification.TemplateId.Value, cancellationToken);
-            if (template != null)
-            {
-                content = template.Body;
-            }
+            var renderedTitle = _templateEngine.Render(rawTitle, notification.TemplateData);
+            notification.SetRenderedTitle(renderedTitle);
         }
 
-        if (!string.IsNullOrEmpty(content))
+        if (!string.IsNullOrWhiteSpace(rawBody))
         {
-            var renderedBody = _templateEngine.Render(content, notification.TemplateData);
+            var renderedBody = _templateEngine.Render(rawBody, notification.TemplateData);
 
             if (notification.Type == NotificationType.Email)
                 renderedBody = EmailTemplateWrapper.Wrap(renderedBody);
 
             notification.SetRenderedBody(renderedBody);
         }
+    }
+
+    private async Task<(string Title, string Body)> GetRawContent(Notification notification, CancellationToken cancellationToken)
+    {
+        if (notification.TemplateId.HasValue)
+        {
+            var template = await _templateRepository.GetByIdAsync(notification.TemplateId.Value, cancellationToken);
+            if (template != null)
+                return (template.DefaultTitle, template.Body);
+        }
+
+        var title = notification switch
+        {
+            EmailNotification e => e.Title,
+            PushNotification p => p.Title,
+            _ => string.Empty
+        };
+
+        return (title!, notification.Body!);
     }
 }

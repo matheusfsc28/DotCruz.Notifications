@@ -6,6 +6,6 @@ namespace DotCruz.Notifications.Application.UseCases.Templates.CreateTemplate;
 public record CreateTemplateCommand(
     string Code,
     string Culture,
-    string DefaultSubject,
+    string DefaultTitle,
     string Body,
     NotificationType Type) : IRequest<Guid>;

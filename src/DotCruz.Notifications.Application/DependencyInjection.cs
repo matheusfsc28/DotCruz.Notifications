@@ -1,5 +1,6 @@
 ﻿using DotCruz.Notifications.Application.Common.Behaviors;
 using DotCruz.Notifications.Application.Common.Services;
+using DotCruz.Notifications.Application.Factories.Notifications;
 using DotCruz.Notifications.Domain.Interfaces;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,7 @@ public static class DependencyInjection
         AddMediatR(services);
         AddValidators(services);
         AddServices(services);
+        AddNotificationFactoryStrategies(services);
 
         return services;
     }
@@ -37,5 +39,12 @@ public static class DependencyInjection
     private static void AddServices(IServiceCollection services)
     {
         services.AddScoped<ITemplateEngine, FluidTemplateEngine>();
+    }
+
+    private static void AddNotificationFactoryStrategies(IServiceCollection services)
+    {
+        services.AddScoped<INotificationFactoryStrategy, EmailFactoryStrategy>();
+        services.AddScoped<INotificationFactoryStrategy, SmsFactoryStrategy>();
+        services.AddScoped<INotificationFactoryStrategy, PushFactoryStrategy>();
     }
 }

@@ -5,7 +5,10 @@ namespace DotCruz.Notifications.Domain.Entities.Notifications;
 
 public class PushNotification : Notification
 {
-    public string Title { get; private set; }
+    public string Title { get; private set; } = string.Empty;
+
+    // For MongoDB
+    private PushNotification() { }
 
     public PushNotification(
         Guid serviceId,
@@ -22,9 +25,15 @@ public class PushNotification : Notification
         Validate();
     }
 
+    public override void SetRenderedTitle(string title)
+    {
+        Title = title;
+        Validate();
+    }
+
     protected override void ValidateSpecificRules(List<string> errors)
     {
         if (string.IsNullOrWhiteSpace(Title))
-            errors.Add(ResourceMessagesException.SUBJECT_EMPTY);
+            errors.Add(ResourceMessagesException.TITLE_EMPTY);
     }
 }

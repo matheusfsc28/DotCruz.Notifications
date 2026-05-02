@@ -12,7 +12,7 @@ public class CreateNotificationCommandBuilder
         string? recipient = null,
         string? culture = null,
         string? body = null,
-        string? subject = null,
+        string? title = null,
         Guid? templateId = null,
         Dictionary<string, object>? templateData = null,
         DateTimeOffset? scheduledFor = null)
@@ -25,7 +25,7 @@ public class CreateNotificationCommandBuilder
             Recipient: recipient ?? f.Internet.Email(),
             Culture: culture,
             Body: body ?? (templateId.HasValue ? null : f.Lorem.Paragraph()),
-            Subject: subject ?? f.Lorem.Sentence(),
+            Title: title ?? f.Lorem.Sentence(),
             TemplateId: templateId,
             TemplateData: templateData,
             ScheduledFor: scheduledFor

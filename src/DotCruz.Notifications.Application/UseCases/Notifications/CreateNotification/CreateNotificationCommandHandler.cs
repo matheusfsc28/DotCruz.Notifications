@@ -23,7 +23,7 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
 
     public async Task<Guid> Handle(CreateNotificationCommand request, CancellationToken cancellationToken)
     {
-        var factory = _factories.FirstOrDefault(f => f.Type == request.Type) 
+        var factory = _factories.FirstOrDefault(f => f.Type == request.Type)
             ?? throw new NotificationTypeNotSupportedException();
 
         var notification = factory.Create(
@@ -31,7 +31,7 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
             request.Recipient,
             request.Culture,
             request.Body,
-            request.Subject,
+            request.Title,
             request.TemplateId,
             request.TemplateData,
             request.ScheduledFor);

@@ -11,7 +11,7 @@ public interface INotificationFactoryStrategy
         string recipient,
         string? culture,
         string? body,
-        string? subject,
+        string? title,
         Guid? templateId,
         Dictionary<string, object>? templateData,
         DateTimeOffset? scheduledFor);

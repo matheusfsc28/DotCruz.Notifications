@@ -24,7 +24,7 @@ public class CreateTemplateCommandHandler : IRequestHandler<CreateTemplateComman
         var template = new Template(
             request.Code,
             request.Culture,
-            request.DefaultSubject,
+            request.DefaultTitle,
             request.Body,
             request.Type);
 
