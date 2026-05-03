@@ -24,5 +24,13 @@ public class NotificationRepositoryBuilder
         return this;
     }
 
+    public NotificationRepositoryBuilder GetPendingScheduled(IEnumerable<Notification> notifications)
+    {
+        _repository.Setup(r => r.GetPendingScheduledAsync(It.IsAny<DateTimeOffset>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(notifications);
+
+        return this;
+    }
+
     public INotificationRepository Build() => _repository.Object;
 }
