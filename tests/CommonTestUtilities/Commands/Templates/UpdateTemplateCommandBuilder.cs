@@ -6,16 +6,23 @@ namespace CommonTestUtilities.Commands.Templates;
 
 public class UpdateTemplateCommandBuilder
 {
-    public static UpdateTemplateCommand Build(Guid? id = null)
+    public static UpdateTemplateCommand Build(
+        Guid? id = null,
+        string? code = null,
+        string? culture = null,
+        string? defaultTitle = null,
+        string? body = null,
+        NotificationType? type = null)
     {
-        return new Faker<UpdateTemplateCommand>()
-            .CustomInstantiator(f => new UpdateTemplateCommand(
-                id ?? Guid.NewGuid(),
-                f.Random.Word(),
-                "en-US",
-                f.Lorem.Sentence(),
-                f.Lorem.Paragraph(),
-                f.PickRandom<NotificationType>()))
-            .Generate();
+        var f = new Faker();
+
+        return new UpdateTemplateCommand(
+            Id: id ?? Guid.Empty,
+            Code: code ?? f.Random.Word(),
+            Culture: culture ?? "en-US",
+            DefaultTitle: defaultTitle ?? f.Lorem.Sentence(),
+            Body: body ?? f.Lorem.Paragraph(),
+            Type: type ?? f.PickRandom<NotificationType>()
+        );
     }
 }

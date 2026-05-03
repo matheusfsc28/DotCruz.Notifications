@@ -37,3 +37,5 @@ app.MapControllers();
 app.UseMiddleware<CultureMiddleware>();
 
 app.Run();
+
+public partial class Program { }

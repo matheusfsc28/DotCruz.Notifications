@@ -6,15 +6,21 @@ namespace CommonTestUtilities.Commands.Templates;
 
 public class CreateTemplateCommandBuilder
 {
-    public static CreateTemplateCommand Build(NotificationType? type = null)
+    public static CreateTemplateCommand Build(
+        string? code = null,
+        string? culture = null,
+        string? defaultTitle = null,
+        string? body = null,
+        NotificationType? type = null)
     {
-        return new Faker<CreateTemplateCommand>()
-            .CustomInstantiator(f => new CreateTemplateCommand(
-                f.Random.Word(),
-                "pt-BR",
-                f.Lorem.Sentence(),
-                f.Lorem.Paragraph(),
-                type ?? f.PickRandom<NotificationType>()))
-            .Generate();
+        var f = new Faker();
+
+        return new CreateTemplateCommand(
+            Code: code ?? f.Random.Word(),
+            Culture: culture ?? "pt-BR",
+            DefaultTitle: defaultTitle ?? f.Lorem.Sentence(),
+            Body: body ?? f.Lorem.Paragraph(),
+            Type: type ?? f.PickRandom<NotificationType>()
+        );
     }
 }

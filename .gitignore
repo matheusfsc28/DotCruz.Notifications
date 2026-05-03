@@ -132,3 +132,4 @@ Desktop.ini
 
 # Credentials
 appsettings.Development.json
+appsettings.Test.json

@@ -11,20 +11,36 @@ namespace DotCruz.Notifications.Infrastructure.DataAccess.Mappings;
 
 public static class MongoDbMappings
 {
+    private static bool _configured = false;
+    private static readonly object _lock = new object();
+
     public static void Configure()
     {
-        var pack = new ConventionPack
+        if (_configured) return;
+        lock (_lock)
         {
-            new CamelCaseElementNameConvention(),
-            new IgnoreExtraElementsConvention(true),
-            new IgnoreIfDefaultConvention(true)
-        };
-        ConventionRegistry.Register("DotCruzConventions", pack, t => true);
+            if (_configured) return;
+            
+            var pack = new ConventionPack
+            {
+                new CamelCaseElementNameConvention(),
+                new IgnoreExtraElementsConvention(true),
+                new IgnoreIfDefaultConvention(true)
+            };
+            ConventionRegistry.Register("DotCruzConventions", pack, t => true);
 
-        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
-        BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.Document));
-        BsonSerializer.RegisterSerializer(new DictionaryStringObjectBsonSerializer());
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+            BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.Document));
+            BsonSerializer.RegisterSerializer(new DictionaryStringObjectBsonSerializer());
 
+            RegisterMaps();
+
+            _configured = true;
+        }
+    }
+
+    private static void RegisterMaps()
+    {
         if (!BsonClassMap.IsClassMapRegistered(typeof(BaseEntity)))
         {
             BsonClassMap.RegisterClassMap<BaseEntity>(cm =>

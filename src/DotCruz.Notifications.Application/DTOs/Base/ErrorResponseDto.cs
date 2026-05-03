@@ -7,4 +7,5 @@ public class ErrorResponseDto
     public ErrorResponseDto(IEnumerable<string> errors) => Errors = errors;
 
     public ErrorResponseDto(string error) => Errors = [error];
+    public ErrorResponseDto() { }
 }

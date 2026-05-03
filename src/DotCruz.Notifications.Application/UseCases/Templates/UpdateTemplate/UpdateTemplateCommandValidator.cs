@@ -1,3 +1,4 @@
+using DotCruz.Notifications.Domain.Enums.Notifications;
 using DotCruz.Notifications.Exceptions;
 using FluentValidation;
 

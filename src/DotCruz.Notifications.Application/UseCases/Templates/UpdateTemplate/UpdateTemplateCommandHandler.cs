@@ -5,7 +5,7 @@ using MediatR;
 
 namespace DotCruz.Notifications.Application.UseCases.Templates.UpdateTemplate;
 
-public class UpdateTemplateCommandHandler : IRequestHandler<UpdateTemplateCommand>
+public class UpdateTemplateCommandHandler : IRequestHandler<UpdateTemplateCommand, Unit>
 {
     private readonly ITemplateRepository _repository;
 
@@ -14,7 +14,7 @@ public class UpdateTemplateCommandHandler : IRequestHandler<UpdateTemplateComman
         _repository = repository;
     }
 
-    public async Task Handle(UpdateTemplateCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateTemplateCommand request, CancellationToken cancellationToken)
     {
         var template = await _repository.GetByIdAsync(request.Id, cancellationToken) 
             ?? throw new NotFoundException(ResourceMessagesException.TEMPLATE_NOT_FOUND);
@@ -29,5 +29,7 @@ public class UpdateTemplateCommandHandler : IRequestHandler<UpdateTemplateComman
         template.Touch();
 
         await _repository.UpdateAsync(template, cancellationToken);
+
+        return Unit.Value;
     }
 }

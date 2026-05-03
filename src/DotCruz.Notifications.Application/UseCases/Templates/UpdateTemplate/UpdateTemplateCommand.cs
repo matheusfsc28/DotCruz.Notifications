@@ -10,4 +10,4 @@ public record UpdateTemplateCommand(
     string? Culture,
     string? DefaultTitle,
     string? Body,
-    NotificationType? Type) : IRequest;
+    NotificationType? Type) : IRequest<Unit>;
