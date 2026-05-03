@@ -171,4 +171,10 @@
   <data name="TEMPLATE_ALREADY_EXISTS" xml:space="preserve">
     <value>A template with this code and culture already exists.</value>
   </data>
+  <data name="NO_TOKEN" xml:space="preserve">
+    <value>Request don't have token.</value>
+  </data>
+  <data name="TOKEN_INVALID" xml:space="preserve">
+    <value>Invalid token</value>
+  </data>
 </root>

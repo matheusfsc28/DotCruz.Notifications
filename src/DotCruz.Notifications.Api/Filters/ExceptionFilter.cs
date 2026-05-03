@@ -1,4 +1,5 @@
-﻿using DotCruz.Notifications.Application.DTOs.Base;
+﻿using DotCruz.Notifications.Api.Extensions;
+using DotCruz.Notifications.Application.DTOs.Base;
 using DotCruz.Notifications.Exceptions;
 using DotCruz.Notifications.Exceptions.BaseExceptions;
 using DotCruz.Notifications.Exceptions.Enums;
@@ -22,7 +23,7 @@ public class ExceptionFilter(ILogger<ExceptionFilter> logger) : IExceptionFilter
 
     private void HandleProjectException(NotificationException exception, ExceptionContext context)
     {
-        var statusCode = MapErrorType(exception.GetErrorType());
+        var statusCode = exception.GetErrorType().MapToStatusCode();
         var errors = exception.GetErrorsMessages();
 
         logger.LogWarning(
@@ -51,12 +52,4 @@ public class ExceptionFilter(ILogger<ExceptionFilter> logger) : IExceptionFilter
 
         context.ExceptionHandled = true;
     }
-
-    private static int MapErrorType(ErrorType errorType) => errorType switch
-    {
-        ErrorType.Validation => StatusCodes.Status400BadRequest,
-        ErrorType.NotFound => StatusCodes.Status404NotFound,
-        ErrorType.Conflict => StatusCodes.Status409Conflict,
-        _ => StatusCodes.Status500InternalServerError,
-    };
 }

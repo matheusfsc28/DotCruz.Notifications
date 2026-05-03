@@ -171,4 +171,10 @@
   <data name="TEMPLATE_ALREADY_EXISTS" xml:space="preserve">
     <value>Já existe um template com este código e idioma.</value>
   </data>
+  <data name="NO_TOKEN" xml:space="preserve">
+    <value>A solicitação não tem token.</value>
+  </data>
+  <data name="TOKEN_INVALID" xml:space="preserve">
+    <value>Token inválido</value>
+  </data>
 </root>

@@ -124,6 +124,15 @@ namespace DotCruz.Notifications.Exceptions {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Request don&apos;t have token..
+        /// </summary>
+        public static string NO_TOKEN {
+            get {
+                return ResourceManager.GetString("NO_TOKEN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The notification id cannot be null..
         /// </summary>
         public static string NOTIFICATION_ID_EMPTY {
@@ -210,6 +219,15 @@ namespace DotCruz.Notifications.Exceptions {
         public static string TITLE_EMPTY {
             get {
                 return ResourceManager.GetString("TITLE_EMPTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Invalid token.
+        /// </summary>
+        public static string TOKEN_INVALID {
+            get {
+                return ResourceManager.GetString("TOKEN_INVALID", resourceCulture);
             }
         }
         
