@@ -5,6 +5,7 @@ using CommonTestUtilities.InlineData;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Services;
 using DotCruz.Notifications.Application.UseCases.Notifications.CreateNotification;
+using DotCruz.Notifications.Domain.Entities.Templates;
 using DotCruz.Notifications.Domain.Enums.Notifications;
 using DotCruz.Notifications.Domain.Interfaces;
 using DotCruz.Notifications.Exceptions;
@@ -50,13 +51,17 @@ public class CreateNotificationCommandHandlerTests
         Assert.Contains(ResourceMessagesException.NOTIFICATION_TYPE_NOT_SUPPORTED, exception.GetErrorsMessages());
     }
 
-    private static CreateNotificationCommandHandler CreateHandler(IEnumerable<INotificationFactoryStrategy>? strategies = null)
+    private static CreateNotificationCommandHandler CreateHandler(IEnumerable<INotificationFactoryStrategy>? strategies = null, Template? template = null)
     {
         strategies ??= new NotificationFactoryStrategyListBuilder().Build();
 
         var repository = new NotificationRepositoryBuilder().Build();
+        var templateRepository = new TemplateRepositoryBuilder();
         var publishService = new PublishNotificationServiceBuilder().Build();
 
-        return new CreateNotificationCommandHandler(repository, strategies, publishService);
+        if (template != null)
+            templateRepository.GetById(template);
+
+        return new CreateNotificationCommandHandler(repository, templateRepository.Build(), strategies, publishService);
     }
 }

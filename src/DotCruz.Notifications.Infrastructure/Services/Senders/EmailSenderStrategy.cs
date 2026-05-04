@@ -34,7 +34,7 @@ public class EmailSenderStrategy : INotificationSenderStrategy
         using var client = new SmtpClient(_emailSettings.Host, _emailSettings.Port)
         {
             Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password),
-            EnableSsl = true
+            EnableSsl = _emailSettings.EnableSsl
         };
 
         var mailMessage = new MailMessage

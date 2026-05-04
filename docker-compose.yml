@@ -1,0 +1,87 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: dotcruz-notifications-mongodb
+    ports:
+      - "27020:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: dotcruz-notifications-rabbitmq
+    ports:
+      - "5675:5672"
+      - "15675:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: dotcruz-notifications-mailpit
+    ports:
+      - "1030:1025" # Mailpit SMTP
+      - "8030:8025" # Mailpit Web UI
+
+  notifications-api:
+    image: dotcruz-notifications-api
+    build:
+      context: .
+      dockerfile: src/DotCruz.Notifications.Api/Dockerfile
+    container_name: dotcruz-notifications-api
+    ports:
+      - "5050:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Settings__ApiKey=DotCruzNotificationsKey
+      - ConnectionStrings__MongoDb=mongodb://mongodb:27017
+      - Settings__MongoDbSettings__DatabaseName=NotificationsDb
+      - Settings__RabbitMqSettings__Host=rabbitmq
+      - Settings__RabbitMqSettings__Port=5672
+      - Settings__RabbitMqSettings__Username=guest
+      - Settings__RabbitMqSettings__Password=guest
+      - Settings__EmailSettings__Host=mailpit
+      - Settings__EmailSettings__Port=1025
+      - Settings__EmailSettings__EnableSsl=false
+      - Settings__EmailSettings__Username=
+      - Settings__EmailSettings__Password=
+      - Settings__EmailSettings__FromEmail=noreply@dotcruz.com
+      - Settings__EmailSettings__FromName=DotCruz Notifications
+    volumes:
+      - dataprotection_keys:/home/app/.aspnet/DataProtection-Keys
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+  notifications-worker:
+    image: dotcruz-notifications-worker
+    build:
+      context: .
+      dockerfile: src/DotCruz.Notifications.Worker/Dockerfile
+    container_name: dotcruz-notifications-worker
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Settings__ApiKey=DotCruzNotificationsKey
+      - ConnectionStrings__MongoDb=mongodb://mongodb:27017
+      - Settings__MongoDbSettings__DatabaseName=NotificationsDb
+      - Settings__RabbitMqSettings__Host=rabbitmq
+      - Settings__RabbitMqSettings__Port=5672
+      - Settings__RabbitMqSettings__Username=guest
+      - Settings__RabbitMqSettings__Password=guest
+      - Settings__EmailSettings__Host=mailpit
+      - Settings__EmailSettings__Port=1025
+      - Settings__EmailSettings__EnableSsl=false
+      - Settings__EmailSettings__Username=
+      - Settings__EmailSettings__Password=
+      - Settings__EmailSettings__FromEmail=noreply@dotcruz.com
+      - Settings__EmailSettings__FromName=DotCruz Notifications
+    volumes:
+      - dataprotection_keys:/home/app/.aspnet/DataProtection-Keys
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+volumes:
+  mongodb_data:
+  dataprotection_keys:

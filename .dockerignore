@@ -1,0 +1,13 @@
+**/.bin/
+**/.obj/
+**/.vs/
+**/.vscode/
+**/.git/
+**/.github/
+**/TestResults/
+docker-compose.yml
+docker-compose.override.yml
+README.md
+LICENSE
+.gitignore
+.dockerignore
