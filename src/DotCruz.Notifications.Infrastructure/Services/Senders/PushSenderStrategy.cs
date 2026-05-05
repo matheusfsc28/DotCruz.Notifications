@@ -19,10 +19,6 @@ public class PushSenderStrategy : INotificationSenderStrategy
 
     public async Task SendAsync(Notification notification, CancellationToken cancellationToken)
     {
-        var push = (PushNotification)notification;
-        
-        _logger.LogInformation(ResourceLogMessages.SENDING_PUSH, push.Recipient, push.Title);
-        
-        await Task.Delay(200, cancellationToken);
+        throw new NotImplementedException();
     }
 }

@@ -19,10 +19,6 @@ public class SmsSenderStrategy : INotificationSenderStrategy
 
     public async Task SendAsync(Notification notification, CancellationToken cancellationToken)
     {
-        var sms = (SmsNotification)notification;
-        
-        _logger.LogInformation(ResourceLogMessages.SENDING_SMS, sms.Recipient, sms.Body);
-        
-        await Task.Delay(300, cancellationToken);
+        throw new NotImplementedException();
     }
 }
