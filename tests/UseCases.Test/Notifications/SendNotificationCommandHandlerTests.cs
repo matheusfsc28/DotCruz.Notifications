@@ -6,10 +6,10 @@ using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Services;
 using DotCruz.Notifications.Application.UseCases.Notifications.SendNotification;
 using DotCruz.Notifications.Domain.Enums.Notifications;
+using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 using DotCruz.Notifications.Domain.Interfaces;
 using DotCruz.Notifications.Domain.Interfaces.Repositories;
-using DotCruz.Notifications.Exceptions;
-using DotCruz.Notifications.Exceptions.BaseExceptions;
 using Microsoft.Extensions.Logging;
 using Moq;
 

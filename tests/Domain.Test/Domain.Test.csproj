@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DotCruz.Notifications.Domain\DotCruz.Notifications.Domain.csproj" />
-    <ProjectReference Include="..\..\src\DotCruz.Notifications.Exceptions\DotCruz.Notifications.Exceptions.csproj" />
     <ProjectReference Include="..\CommonTestUtilities\CommonTestUtilities.csproj" />
   </ItemGroup>
 

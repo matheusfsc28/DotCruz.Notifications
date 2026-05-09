@@ -1,4 +1,4 @@
-﻿namespace DotCruz.Notifications.Exceptions.Enums;
+﻿namespace DotCruz.Notifications.Domain.Exceptions.Enums;
 
 public enum ErrorType
 {

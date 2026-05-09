@@ -1,5 +1,4 @@
-using DotCruz.Notifications.Domain.Enums.Notifications;
-using DotCruz.Notifications.Exceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 using FluentValidation;
 
 namespace DotCruz.Notifications.Application.UseCases.Templates.UpdateTemplate;

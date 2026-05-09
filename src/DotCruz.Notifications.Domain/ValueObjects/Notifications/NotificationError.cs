@@ -1,5 +1,5 @@
-﻿using DotCruz.Notifications.Exceptions;
-using DotCruz.Notifications.Exceptions.BaseExceptions;
+﻿using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 
 namespace DotCruz.Notifications.Domain.ValueObjects.Notifications;
 

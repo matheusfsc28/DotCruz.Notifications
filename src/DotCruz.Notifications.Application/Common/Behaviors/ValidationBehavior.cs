@@ -1,4 +1,4 @@
-using DotCruz.Notifications.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
 using FluentValidation;
 using MediatR;
 

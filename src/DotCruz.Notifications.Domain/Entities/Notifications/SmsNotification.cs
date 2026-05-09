@@ -1,11 +1,9 @@
 using DotCruz.Notifications.Domain.Enums.Notifications;
-using DotCruz.Notifications.Exceptions;
 
 namespace DotCruz.Notifications.Domain.Entities.Notifications;
 
 public class SmsNotification : Notification
 {
-    // For MongoDB
     private SmsNotification() { }
 
     public SmsNotification(

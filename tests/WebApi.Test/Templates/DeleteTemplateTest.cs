@@ -1,6 +1,6 @@
 using CommonTestUtilities.InlineData;
 using DotCruz.Notifications.Application.DTOs.Base;
-using DotCruz.Notifications.Exceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;

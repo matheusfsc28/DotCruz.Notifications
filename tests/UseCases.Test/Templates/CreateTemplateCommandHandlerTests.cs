@@ -2,8 +2,8 @@ using CommonTestUtilities.Commands.Templates;
 using CommonTestUtilities.Entities.Templates;
 using CommonTestUtilities.Repositories;
 using DotCruz.Notifications.Application.UseCases.Templates.CreateTemplate;
-using DotCruz.Notifications.Exceptions;
-using DotCruz.Notifications.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 
 namespace UseCases.Test.Templates;
 

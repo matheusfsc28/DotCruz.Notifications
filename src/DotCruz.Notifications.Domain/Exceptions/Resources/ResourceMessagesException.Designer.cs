@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DotCruz.Notifications.Exceptions {
+namespace DotCruz.Notifications.Domain.Exceptions.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace DotCruz.Notifications.Exceptions {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DotCruz.Notifications.Exceptions.ResourceMessagesException", typeof(ResourceMessagesException).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DotCruz.Notifications.Domain.Exceptions.Resources.ResourceMessagesException", typeof(ResourceMessagesException).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

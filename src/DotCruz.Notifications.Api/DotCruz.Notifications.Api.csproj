@@ -14,7 +14,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DotCruz.Notifications.Application\DotCruz.Notifications.Application.csproj" />
     <ProjectReference Include="..\DotCruz.Notifications.CrossCutting\DotCruz.Notifications.CrossCutting.csproj" />
-    <ProjectReference Include="..\DotCruz.Notifications.Exceptions\DotCruz.Notifications.Exceptions.csproj" />
     <ProjectReference Include="..\DotCruz.Notifications.Infrastructure\DotCruz.Notifications.Infrastructure.csproj" />
   </ItemGroup>
 

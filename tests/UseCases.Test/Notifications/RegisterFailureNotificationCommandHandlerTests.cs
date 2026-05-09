@@ -3,8 +3,8 @@ using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
 using DotCruz.Notifications.Application.UseCases.Notifications.RegisterFailureNotification;
 using DotCruz.Notifications.Domain.Enums.Notifications;
-using DotCruz.Notifications.Exceptions;
-using DotCruz.Notifications.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 using Moq;
 
 namespace UseCases.Test.Notifications;

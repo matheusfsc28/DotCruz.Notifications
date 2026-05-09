@@ -1,7 +1,7 @@
 using CommonTestUtilities.Commands.Notifications;
 using DotCruz.Notifications.Application.UseCases.Notifications.CreateNotification;
 using DotCruz.Notifications.Domain.Enums.Notifications;
-using DotCruz.Notifications.Exceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 
 namespace Validators.Test.Notifications;
 

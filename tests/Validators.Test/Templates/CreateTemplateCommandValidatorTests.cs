@@ -1,7 +1,7 @@
 using CommonTestUtilities.Commands.Templates;
 using DotCruz.Notifications.Application.UseCases.Templates.CreateTemplate;
 using DotCruz.Notifications.Domain.Enums.Notifications;
-using DotCruz.Notifications.Exceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 
 namespace Validators.Test.Templates;
 

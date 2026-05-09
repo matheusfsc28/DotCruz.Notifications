@@ -1,7 +1,6 @@
-﻿using DotCruz.Notifications.Exceptions.Enums;
-using System.Net;
+﻿using DotCruz.Notifications.Domain.Exceptions.Enums;
 
-namespace DotCruz.Notifications.Exceptions.BaseExceptions;
+namespace DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
 
 public abstract class NotificationException : Exception
 {

@@ -1,6 +1,6 @@
-﻿using DotCruz.Notifications.Exceptions.Enums;
+﻿using DotCruz.Notifications.Domain.Exceptions.Enums;
 
-namespace DotCruz.Notifications.Exceptions.BaseExceptions;
+namespace DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
 
 public class UnauthorizedException : NotificationException
 {

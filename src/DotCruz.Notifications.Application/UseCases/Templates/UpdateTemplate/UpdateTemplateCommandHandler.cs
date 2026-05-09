@@ -1,6 +1,6 @@
+using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 using DotCruz.Notifications.Domain.Interfaces.Repositories;
-using DotCruz.Notifications.Exceptions;
-using DotCruz.Notifications.Exceptions.BaseExceptions;
 using MediatR;
 
 namespace DotCruz.Notifications.Application.UseCases.Templates.UpdateTemplate;

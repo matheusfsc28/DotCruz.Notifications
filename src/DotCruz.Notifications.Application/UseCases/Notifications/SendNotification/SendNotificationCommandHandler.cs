@@ -2,10 +2,10 @@ using DotCruz.Notifications.Application.Common.Utils;
 using DotCruz.Notifications.CrossCutting.Resources;
 using DotCruz.Notifications.Domain.Entities.Notifications;
 using DotCruz.Notifications.Domain.Enums.Notifications;
+using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 using DotCruz.Notifications.Domain.Interfaces;
 using DotCruz.Notifications.Domain.Interfaces.Repositories;
-using DotCruz.Notifications.Exceptions;
-using DotCruz.Notifications.Exceptions.BaseExceptions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

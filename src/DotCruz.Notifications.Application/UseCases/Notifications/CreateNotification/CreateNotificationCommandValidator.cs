@@ -1,5 +1,5 @@
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 using FluentValidation;
-using DotCruz.Notifications.Exceptions;
 
 namespace DotCruz.Notifications.Application.UseCases.Notifications.CreateNotification;
 

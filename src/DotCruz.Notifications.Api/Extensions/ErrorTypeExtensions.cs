@@ -1,5 +1,4 @@
-using DotCruz.Notifications.Exceptions.Enums;
-using Microsoft.AspNetCore.Http;
+using DotCruz.Notifications.Domain.Exceptions.Enums;
 
 namespace DotCruz.Notifications.Api.Extensions;
 

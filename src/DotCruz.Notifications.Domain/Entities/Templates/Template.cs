@@ -1,7 +1,7 @@
 using DotCruz.Notifications.Domain.Entities.Base;
 using DotCruz.Notifications.Domain.Enums.Notifications;
-using DotCruz.Notifications.Exceptions;
-using DotCruz.Notifications.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 
 namespace DotCruz.Notifications.Domain.Entities.Templates;
 

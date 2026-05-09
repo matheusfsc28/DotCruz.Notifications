@@ -1,6 +1,6 @@
 using CommonTestUtilities.Entities.Templates;
-using DotCruz.Notifications.Exceptions;
-using DotCruz.Notifications.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 using FluentAssertions;
 using Xunit;
 

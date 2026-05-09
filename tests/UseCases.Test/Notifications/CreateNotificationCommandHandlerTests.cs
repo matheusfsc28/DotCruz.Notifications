@@ -7,9 +7,9 @@ using CommonTestUtilities.Services;
 using DotCruz.Notifications.Application.UseCases.Notifications.CreateNotification;
 using DotCruz.Notifications.Domain.Entities.Templates;
 using DotCruz.Notifications.Domain.Enums.Notifications;
+using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 using DotCruz.Notifications.Domain.Interfaces;
-using DotCruz.Notifications.Exceptions;
-using DotCruz.Notifications.Exceptions.BaseExceptions;
 
 namespace UseCases.Test.Notifications;
 

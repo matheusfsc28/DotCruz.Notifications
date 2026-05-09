@@ -1,6 +1,6 @@
 using DotCruz.Notifications.Application.Common.Interfaces;
 using DotCruz.Notifications.CrossCutting.Resources;
-using DotCruz.Notifications.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

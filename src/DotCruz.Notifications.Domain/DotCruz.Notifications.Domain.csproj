@@ -7,7 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotCruz.Notifications.Exceptions\DotCruz.Notifications.Exceptions.csproj" />
+    <Compile Update="Exceptions\Resources\ResourceMessagesException.Designer.cs">
+      <DependentUpon>ResourceMessagesException.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Exceptions\Resources\ResourceMessagesException.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>ResourceMessagesException.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

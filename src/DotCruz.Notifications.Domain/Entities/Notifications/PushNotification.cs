@@ -1,5 +1,5 @@
 using DotCruz.Notifications.Domain.Enums.Notifications;
-using DotCruz.Notifications.Exceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 
 namespace DotCruz.Notifications.Domain.Entities.Notifications;
 
@@ -7,7 +7,6 @@ public class PushNotification : Notification
 {
     public string Title { get; private set; } = string.Empty;
 
-    // For MongoDB
     private PushNotification() { }
 
     public PushNotification(
