@@ -1,10 +1,11 @@
-using CommonTestUtilities.Commands.Notifications;
+﻿using CommonTestUtilities.Commands.Notifications;
 using CommonTestUtilities.Entities;
 using CommonTestUtilities.Factories;
 using CommonTestUtilities.InlineData;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Services;
 using DotCruz.Notifications.Application.UseCases.Notifications.CreateNotification;
+using DotCruz.Notifications.Contracts.Enums.Notifications;
 using DotCruz.Notifications.Domain.Entities.Templates;
 using DotCruz.Notifications.Domain.Enums.Notifications;
 using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
@@ -16,13 +17,22 @@ namespace UseCases.Test.Notifications;
 public class CreateNotificationCommandHandlerTests
 {
     [Theory]
-    [ClassData(typeof(NotificationTypeInlineDataTest))]
-    public async Task Success(NotificationType type)
+    [ClassData(typeof(IntegrationNotificationTypeInlineDataTest))]
+    public async Task Success(IntegrationNotificationType type)
     {
         var command = CreateNotificationCommandBuilder.Build(type: type);
-        var notification = NotificationBuilder.Build(type);
         
-        var strategy = new NotificationFactoryStrategyBuilder(type)
+        var domainType = type switch
+        {
+            IntegrationNotificationType.Email => NotificationType.Email,
+            IntegrationNotificationType.Sms => NotificationType.Sms,
+            IntegrationNotificationType.Push => NotificationType.Push,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        var notification = NotificationBuilder.Build(domainType);
+        
+        var strategy = new NotificationFactoryStrategyBuilder(domainType)
             .Create(notification)
             .Build();
             

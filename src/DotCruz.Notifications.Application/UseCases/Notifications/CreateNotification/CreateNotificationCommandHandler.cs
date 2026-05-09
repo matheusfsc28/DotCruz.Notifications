@@ -1,5 +1,7 @@
+﻿using DotCruz.Notifications.Contracts.Enums.Notifications;
+using DotCruz.Notifications.Domain.Entities.Templates;
+using DotCruz.Notifications.Domain.Enums.Notifications;
 using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
-using DotCruz.Notifications.Domain.Exceptions.Resources;
 using DotCruz.Notifications.Domain.Interfaces;
 using DotCruz.Notifications.Domain.Interfaces.Repositories;
 using MediatR;
@@ -27,21 +29,29 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
 
     public async Task<Guid> Handle(CreateNotificationCommand request, CancellationToken cancellationToken)
     {
-        if (request.TemplateId.HasValue)
-            await ValidateTemplateExist(request.TemplateId.Value, cancellationToken);
+        var message = request.Message;
+        Guid? resolvedTemplateId = null;
 
-        var factory = _factories.FirstOrDefault(f => f.Type == request.Type)
+        if (!string.IsNullOrWhiteSpace(message.TemplateCode))
+        {
+            var template = await ResolveTemplateAsync(message.TemplateCode, message.Culture, cancellationToken);
+            resolvedTemplateId = template?.Id;
+        }
+
+        var domainType = MapToDomainType(message.Type);
+
+        var factory = _factories.FirstOrDefault(f => f.Type == domainType)
             ?? throw new NotificationTypeNotSupportedException();
 
         var notification = factory.Create(
-            request.ServiceId,
-            request.Recipient,
-            request.Culture,
-            request.Body,
-            request.Title,
-            request.TemplateId,
-            request.TemplateData,
-            request.ScheduledFor);
+            message.ServiceId,
+            message.Recipient,
+            message.Culture,
+            message.Body,
+            message.Title,
+            resolvedTemplateId,
+            message.TemplateData,
+            message.ScheduledFor);
 
         await _notificationRepository.AddAsync(notification, cancellationToken);
         
@@ -51,9 +61,27 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
         return notification.Id;
     }
 
-    private async Task ValidateTemplateExist(Guid templateId, CancellationToken cancellationToken)
+    private async Task<Template?> ResolveTemplateAsync(string code, string? culture, CancellationToken cancellationToken)
     {
-        var _ = await _templateRepository.GetByIdAsync(templateId, cancellationToken)
-            ?? throw new NotFoundException(ResourceMessagesException.TEMPLATE_NOT_FOUND);
+        var template = await _templateRepository.GetByCodeAsync(code, culture ?? "pt-BR", cancellationToken);
+        
+        if (template == null && culture != "pt-BR")
+            template = await _templateRepository.GetByCodeAsync(code, "pt-BR", cancellationToken);
+
+        if (template == null && culture != "en" && culture != "pt-BR")
+            template = await _templateRepository.GetByCodeAsync(code, "en", cancellationToken);
+
+        return template;
+    }
+
+    private static NotificationType MapToDomainType(IntegrationNotificationType type)
+    {
+        return type switch
+        {
+            IntegrationNotificationType.Email => NotificationType.Email,
+            IntegrationNotificationType.Sms => NotificationType.Sms,
+            IntegrationNotificationType.Push => NotificationType.Push,
+            _ => throw new NotificationTypeNotSupportedException()
+        };
     }
 }

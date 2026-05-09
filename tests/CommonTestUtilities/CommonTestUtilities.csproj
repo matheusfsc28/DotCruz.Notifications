@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DotCruz.Notifications.Application\DotCruz.Notifications.Application.csproj" />
+    <ProjectReference Include="..\..\src\DotCruz.Notifications.Contracts\DotCruz.Notifications.Contracts.csproj" />
     <ProjectReference Include="..\..\src\DotCruz.Notifications.Domain\DotCruz.Notifications.Domain.csproj" />
   </ItemGroup>
 

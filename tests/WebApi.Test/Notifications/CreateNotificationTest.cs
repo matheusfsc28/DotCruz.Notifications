@@ -1,7 +1,7 @@
 ﻿using CommonTestUtilities.Commands.Notifications;
 using CommonTestUtilities.InlineData;
 using DotCruz.Notifications.Application.DTOs.Base;
-using DotCruz.Notifications.Domain.Enums.Notifications;
+using DotCruz.Notifications.Contracts.Enums.Notifications;
 using DotCruz.Notifications.Domain.Exceptions.Resources;
 using System.Globalization;
 using System.Net;
@@ -13,21 +13,21 @@ public class CreateNotificationTest : NotificationClassFixture
 {
     private readonly string ENDPOINT = "api/notification";
     private readonly string _apiToken;
-    private readonly Guid _templateId;
+    private readonly string _templateCode;
 
     public CreateNotificationTest(CustomWebApplicationFactory factory) : base(factory) 
     {
         _apiToken = factory.GetApiToken();
-        _templateId = factory.GetTemplateId();
+        _templateCode = factory.GetTemplateCode();
     }
 
     [Theory]
-    [ClassData(typeof(NotificationTypeInlineDataTest))]
-    public async Task Success(NotificationType type)
+    [ClassData(typeof(IntegrationNotificationTypeInlineDataTest))]
+    public async Task Success(IntegrationNotificationType type)
     {
-        var request = CreateNotificationCommandBuilder.Build(type: type);
+        var command = CreateNotificationCommandBuilder.Build(type: type);
 
-        var response = await DoPost(ENDPOINT, request, _apiToken);
+        var response = await DoPost(ENDPOINT, command.Message, _apiToken);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -37,12 +37,12 @@ public class CreateNotificationTest : NotificationClassFixture
     }
 
     [Theory]
-    [ClassData(typeof(NotificationTypeInlineDataTest))]
-    public async Task Success_With_Template(NotificationType type)
+    [ClassData(typeof(IntegrationNotificationTypeInlineDataTest))]
+    public async Task Success_With_Template(IntegrationNotificationType type)
     {
-        var request = CreateNotificationCommandBuilder.Build(type: type, templateId: _templateId);
+        var command = CreateNotificationCommandBuilder.Build(type: type, templateCode: _templateCode);
 
-        var response = await DoPost(ENDPOINT, request, _apiToken);
+        var response = await DoPost(ENDPOINT, command.Message, _apiToken);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -52,12 +52,12 @@ public class CreateNotificationTest : NotificationClassFixture
     }
 
     [Theory]
-    [ClassData(typeof(NotificationTypeInlineDataTest))]
-    public async Task Success_Scheduled(NotificationType type)
+    [ClassData(typeof(IntegrationNotificationTypeInlineDataTest))]
+    public async Task Success_Scheduled(IntegrationNotificationType type)
     {
-        var request = CreateNotificationCommandBuilder.Build(type: type, scheduledFor: DateTimeOffset.UtcNow.AddDays(1));
+        var command = CreateNotificationCommandBuilder.Build(type: type, scheduledFor: DateTimeOffset.UtcNow.AddDays(1));
 
-        var response = await DoPost(ENDPOINT, request, _apiToken);
+        var response = await DoPost(ENDPOINT, command.Message, _apiToken);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -70,9 +70,9 @@ public class CreateNotificationTest : NotificationClassFixture
     [ClassData(typeof(CultureInlineDataTest))]
     public async Task Error_Unauthorized_Request(string culture)
     {
-        var request = CreateNotificationCommandBuilder.Build();
+        var command = CreateNotificationCommandBuilder.Build();
 
-        var response = await DoPost(ENDPOINT, request, culture: culture);
+        var response = await DoPost(ENDPOINT, command.Message, culture: culture);
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
@@ -88,9 +88,9 @@ public class CreateNotificationTest : NotificationClassFixture
     [ClassData(typeof(CultureInlineDataTest))]
     public async Task Error_Invalid_Token(string culture)
     {
-        var request = CreateNotificationCommandBuilder.Build();
+        var command = CreateNotificationCommandBuilder.Build();
 
-        var response = await DoPost(ENDPOINT, request, token: "invalidToken", culture: culture);
+        var response = await DoPost(ENDPOINT, command.Message, token: "invalidToken", culture: culture);
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
@@ -106,9 +106,9 @@ public class CreateNotificationTest : NotificationClassFixture
     [ClassData(typeof(CultureInlineDataTest))]
     public async Task Error_Empty_Recipient(string culture)
     {
-        var request = CreateNotificationCommandBuilder.Build(recipient: string.Empty);
+        var command = CreateNotificationCommandBuilder.Build(recipient: string.Empty);
 
-        var response = await DoPost(ENDPOINT, request, token: _apiToken, culture: culture);
+        var response = await DoPost(ENDPOINT, command.Message, token: _apiToken, culture: culture);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -124,9 +124,9 @@ public class CreateNotificationTest : NotificationClassFixture
     [ClassData(typeof(CultureInlineDataTest))]
     public async Task Error_Empty_ServiceId(string culture)
     {
-        var request = CreateNotificationCommandBuilder.Build(serviceId: Guid.Empty);
+        var command = CreateNotificationCommandBuilder.Build(serviceId: Guid.Empty);
 
-        var response = await DoPost(ENDPOINT, request, token: _apiToken, culture: culture);
+        var response = await DoPost(ENDPOINT, command.Message, token: _apiToken, culture: culture);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -142,9 +142,9 @@ public class CreateNotificationTest : NotificationClassFixture
     [ClassData(typeof(CultureInlineDataTest))]
     public async Task Error_Body_And_Template_Empty(string culture)
     {
-        var request = CreateNotificationCommandBuilder.Build(body: string.Empty);
+        var command = CreateNotificationCommandBuilder.Build(body: string.Empty, templateCode: null);
 
-        var response = await DoPost(ENDPOINT, request, token: _apiToken, culture: culture);
+        var response = await DoPost(ENDPOINT, command.Message, token: _apiToken, culture: culture);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -160,9 +160,9 @@ public class CreateNotificationTest : NotificationClassFixture
     [ClassData(typeof(CultureInlineDataTest))]
     public async Task Error_Invalid_NotificationType(string culture)
     {
-        var request = CreateNotificationCommandBuilder.Build(type: (NotificationType)100);
+        var command = CreateNotificationCommandBuilder.Build(type: (IntegrationNotificationType)100);
 
-        var response = await DoPost(ENDPOINT, request, token: _apiToken, culture: culture);
+        var response = await DoPost(ENDPOINT, command.Message, token: _apiToken, culture: culture);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -178,9 +178,9 @@ public class CreateNotificationTest : NotificationClassFixture
     [ClassData(typeof(CultureInlineDataTest))]
     public async Task Error_Empty_Title_Email(string culture)
     {
-        var request = CreateNotificationCommandBuilder.Build(type: NotificationType.Email, title: string.Empty);
+        var command = CreateNotificationCommandBuilder.Build(type: IntegrationNotificationType.Email, title: string.Empty);
 
-        var response = await DoPost(ENDPOINT, request, token: _apiToken, culture: culture);
+        var response = await DoPost(ENDPOINT, command.Message, token: _apiToken, culture: culture);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -196,9 +196,9 @@ public class CreateNotificationTest : NotificationClassFixture
     [ClassData(typeof(CultureInlineDataTest))]
     public async Task Error_Empty_Title_Push(string culture)
     {
-        var request = CreateNotificationCommandBuilder.Build(type: NotificationType.Push, title: string.Empty);
+        var command = CreateNotificationCommandBuilder.Build(type: IntegrationNotificationType.Push, title: string.Empty);
 
-        var response = await DoPost(ENDPOINT, request, token: _apiToken, culture: culture);
+        var response = await DoPost(ENDPOINT, command.Message, token: _apiToken, culture: culture);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 

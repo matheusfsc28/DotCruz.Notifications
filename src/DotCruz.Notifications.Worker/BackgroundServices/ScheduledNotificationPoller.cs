@@ -1,6 +1,6 @@
+﻿using DotCruz.Notifications.Application.UseCases.Notifications.PollScheduledNotifications;
 using DotCruz.Notifications.CrossCutting.Resources;
-using DotCruz.Notifications.Domain.Interfaces;
-using DotCruz.Notifications.Domain.Interfaces.Repositories;
+using MediatR;
 
 namespace DotCruz.Notifications.Worker.BackgroundServices;
 
@@ -26,28 +26,15 @@ public class ScheduledNotificationPoller : BackgroundService
         {
             try
             {
-                await PollScheduledNotifications(stoppingToken);
+                using var scope = _serviceProvider.CreateScope();
+                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+                await mediator.Send(new PollScheduledNotificationsCommand(), stoppingToken);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ResourceLogMessages.ERROR_POLLING_NOTIFICATIONS);
             }
-        }
-    }
-
-    private async Task PollScheduledNotifications(CancellationToken stoppingToken)
-    {
-        using var scope = _serviceProvider.CreateScope();
-        var repository = scope.ServiceProvider.GetRequiredService<INotificationRepository>();
-        var publishService = scope.ServiceProvider.GetRequiredService<IPublishNotificationService>();
-
-        var notifications = await repository.GetPendingScheduledAsync(DateTimeOffset.UtcNow, limit: 100, stoppingToken);
-
-        foreach (var notification in notifications)
-        {
-            _logger.LogInformation(ResourceLogMessages.PROCESSING_SCHEDULED_NOTIFICATION, notification.Id);
-
-            await publishService.PublishNotificationCreatedEvent(notification, stoppingToken);
         }
     }
 }

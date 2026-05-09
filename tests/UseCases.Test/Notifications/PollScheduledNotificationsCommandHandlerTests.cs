@@ -1,20 +1,20 @@
-using CommonTestUtilities.Entities.Notifications;
+﻿using CommonTestUtilities.Entities.Notifications;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Services;
+using DotCruz.Notifications.Application.UseCases.Notifications.PollScheduledNotifications;
 using DotCruz.Notifications.Domain.Entities.Notifications;
-using DotCruz.Notifications.Worker.BackgroundServices;
+using DotCruz.Notifications.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Worker.Test.BackgroundServices;
+namespace UseCases.Test.Notifications;
 
-public class ScheduledNotificationPollerTest
+public class PollScheduledNotificationsCommandHandlerTests
 {
     [Fact]
-    public async Task PollScheduledNotifications_ShouldPublishEvents_WhenPendingNotificationsExist()
+    public async Task Handle_ShouldPublishEvents_WhenPendingNotificationsExist()
     {
         var notification = EmailNotificationBuilder.Build(scheduledFor: DateTimeOffset.UtcNow.AddMinutes(-10));
-
         var notifications = new List<Notification> { notification };
 
         var repository = new NotificationRepositoryBuilder()
@@ -22,17 +22,11 @@ public class ScheduledNotificationPollerTest
             .Build();
 
         var publishService = new PublishNotificationServiceBuilder().Build();
+        var logger = Mock.Of<ILogger<PollScheduledNotificationsCommandHandler>>();
 
-        var serviceProvider = new ServiceProviderBuilder()
-            .WithService(repository)
-            .WithService(publishService)
-            .Build();
+        var handler = new PollScheduledNotificationsCommandHandler(repository, publishService, logger);
 
-        var logger = Mock.Of<ILogger<ScheduledNotificationPoller>>();
-
-        var poller = new ScheduledNotificationPollerWrapper(serviceProvider, logger);
-
-        await poller.ExposedPollScheduledNotifications(TestContext.Current.CancellationToken);
+        await handler.Handle(new PollScheduledNotificationsCommand(), TestContext.Current.CancellationToken);
 
         Mock.Get(publishService).Verify(x => x.PublishNotificationCreatedEvent(
             It.Is<Notification>(n => n.Id == notification.Id),

@@ -1,10 +1,11 @@
-using CommonTestUtilities.Commands.Notifications;
+﻿using CommonTestUtilities.Commands.Notifications;
 using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
 using DotCruz.Notifications.Application.UseCases.Notifications.RegisterFailureNotification;
 using DotCruz.Notifications.Domain.Enums.Notifications;
 using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
 using DotCruz.Notifications.Domain.Exceptions.Resources;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace UseCases.Test.Notifications;
@@ -21,7 +22,8 @@ public class RegisterFailureNotificationCommandHandlerTests
             .GetById(notification)
             .Build();
 
-        var handler = new RegisterFailureNotificationCommandHandler(repository);
+        var logger = Mock.Of<ILogger<RegisterFailureNotificationCommandHandler>>();
+        var handler = new RegisterFailureNotificationCommandHandler(repository, logger);
 
         await handler.Handle(command, TestContext.Current.CancellationToken);
 
@@ -40,7 +42,8 @@ public class RegisterFailureNotificationCommandHandlerTests
         var command = RegisterFailureNotificationCommandBuilder.Build();
         var repository = new NotificationRepositoryBuilder().Build();
 
-        var handler = new RegisterFailureNotificationCommandHandler(repository);
+        var logger = Mock.Of<ILogger<RegisterFailureNotificationCommandHandler>>();
+        var handler = new RegisterFailureNotificationCommandHandler(repository, logger);
 
         Task act() => handler.Handle(command, TestContext.Current.CancellationToken);
 

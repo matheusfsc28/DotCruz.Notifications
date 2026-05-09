@@ -1,4 +1,4 @@
-using CommonTestUtilities.Entities;
+﻿using CommonTestUtilities.Entities;
 using CommonTestUtilities.Entities.Templates;
 using DotCruz.Notifications.CrossCutting.Settings;
 using DotCruz.Notifications.Domain.Entities.Notifications;
@@ -19,7 +19,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     private Template _template = default!;
     private Notification _notification = default!;
     private string _apiToken = default!;
-    private readonly string _databaseName = $"Notifications_Test_{Guid.NewGuid():N}";
+    private readonly string _databaseName = "Notifications_Test_" + Guid.NewGuid().ToString("N");
     private string? _databaseConnectionString = null;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -65,11 +65,12 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     }
 
     public Guid GetTemplateId() => _template.Id;
+    public string GetTemplateCode() => _template.Code;
     public string GetApiToken() => _apiToken;
 
     private void StartDatabase(NotificationDbContext dbContext)
     {
-        _template = TemplateBuilder.Build();
+        _template = TemplateBuilder.Build(culture: "pt-BR");
         _notification = NotificationBuilder.Build(NotificationType.Email);
 
         dbContext.Templates.InsertOne(_template);

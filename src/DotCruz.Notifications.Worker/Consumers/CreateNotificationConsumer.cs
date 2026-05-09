@@ -1,25 +1,21 @@
-using DotCruz.Notifications.Application.UseCases.Notifications.CreateNotification;
-using DotCruz.Notifications.CrossCutting.Resources;
+﻿using DotCruz.Notifications.Application.UseCases.Notifications.CreateNotification;
+using DotCruz.Notifications.Contracts.Messages.Notifications.CreateNotification;
 using MassTransit;
 using MediatR;
 
 namespace DotCruz.Notifications.Worker.Consumers;
 
-public class CreateNotificationConsumer : IConsumer<CreateNotificationCommand>
+public class CreateNotificationConsumer : IConsumer<CreateNotificationMessage>
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<CreateNotificationConsumer> _logger;
 
-    public CreateNotificationConsumer(IMediator mediator, ILogger<CreateNotificationConsumer> logger)
+    public CreateNotificationConsumer(IMediator mediator)
     {
         _mediator = mediator;
-        _logger = logger;
     }
 
-    public async Task Consume(ConsumeContext<CreateNotificationCommand> context)
+    public async Task Consume(ConsumeContext<CreateNotificationMessage> context)
     {
-        _logger.LogInformation(ResourceLogMessages.CONSUMING_CREATE_NOTIFICATION, context.Message.Recipient);
-
-        await _mediator.Send(context.Message);
+        await _mediator.Send(new CreateNotificationCommand(context.Message), context.CancellationToken);
     }
 }

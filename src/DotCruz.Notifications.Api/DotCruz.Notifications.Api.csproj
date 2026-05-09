@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotCruz.Notifications.Application\DotCruz.Notifications.Application.csproj" />
+    <ProjectReference Include="..\DotCruz.Notifications.Contracts\DotCruz.Notifications.Contracts.csproj" />
     <ProjectReference Include="..\DotCruz.Notifications.CrossCutting\DotCruz.Notifications.CrossCutting.csproj" />
     <ProjectReference Include="..\DotCruz.Notifications.Infrastructure\DotCruz.Notifications.Infrastructure.csproj" />
   </ItemGroup>
