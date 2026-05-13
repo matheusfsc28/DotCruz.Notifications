@@ -4,6 +4,14 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<IsPackable>true</IsPackable>
+	<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	<PackageId>DotCruz.Notifications.Contracts</PackageId>	
+	<Version>1.0.0</Version>
+	<Authors>Matheus Felipe @matheusfsc28</Authors>
+	<Company>DotCruz</Company>
+	<Description>Contratos, enums e mensagens de integração para o serviço de Notificações da DotCruz.</Description>
+	<RepositoryUrl>https://github.com/matheusfsc28/DotCruz.Notifications</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
