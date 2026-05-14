@@ -29,7 +29,7 @@ public class CreateTemplateTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-        var responseId = await response.Content.ReadFromJsonAsync<Guid>();
+        var responseId = await response.Content.ReadFromJsonAsync<Guid>(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotEqual(Guid.Empty, responseId);
     }
@@ -44,7 +44,7 @@ public class CreateTemplateTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("NO_TOKEN", new CultureInfo(culture));
 
@@ -62,7 +62,7 @@ public class CreateTemplateTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("TOKEN_INVALID", new CultureInfo(culture));
 
@@ -80,7 +80,7 @@ public class CreateTemplateTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("CODE_EMPTY", new CultureInfo(culture));
 
@@ -98,7 +98,7 @@ public class CreateTemplateTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("CULTURE_EMPTY", new CultureInfo(culture));
 
@@ -116,7 +116,7 @@ public class CreateTemplateTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("DEFAULT_TITLE_EMPTY", new CultureInfo(culture));
 
@@ -134,7 +134,7 @@ public class CreateTemplateTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("BODY_EMPTY", new CultureInfo(culture));
 
@@ -152,7 +152,7 @@ public class CreateTemplateTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("NOTIFICATION_TYPE_INVALID", new CultureInfo(culture));
 
@@ -172,7 +172,7 @@ public class CreateTemplateTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("TEMPLATE_ALREADY_EXISTS", new CultureInfo(culture));
 

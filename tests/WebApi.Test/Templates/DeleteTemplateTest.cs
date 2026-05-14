@@ -35,7 +35,7 @@ public class DeleteTemplateTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("NO_TOKEN", new CultureInfo(culture));
 
@@ -51,7 +51,7 @@ public class DeleteTemplateTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("TOKEN_INVALID", new CultureInfo(culture));
 
@@ -67,7 +67,7 @@ public class DeleteTemplateTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("TEMPLATE_NOT_FOUND", new CultureInfo(culture));
 

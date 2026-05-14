@@ -31,7 +31,7 @@ public class CreateNotificationTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-        var responseId = await response.Content.ReadFromJsonAsync<Guid>();
+        var responseId = await response.Content.ReadFromJsonAsync<Guid>(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotEqual(Guid.Empty, responseId);
     }
@@ -46,7 +46,7 @@ public class CreateNotificationTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-        var responseId = await response.Content.ReadFromJsonAsync<Guid>();
+        var responseId = await response.Content.ReadFromJsonAsync<Guid>(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotEqual(Guid.Empty, responseId);
     }
@@ -61,7 +61,7 @@ public class CreateNotificationTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-        var responseId = await response.Content.ReadFromJsonAsync<Guid>();
+        var responseId = await response.Content.ReadFromJsonAsync<Guid>(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotEqual(Guid.Empty, responseId);
     }
@@ -76,7 +76,7 @@ public class CreateNotificationTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("NO_TOKEN", new CultureInfo(culture));
 
@@ -94,7 +94,7 @@ public class CreateNotificationTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("TOKEN_INVALID", new CultureInfo(culture));
 
@@ -112,7 +112,7 @@ public class CreateNotificationTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("RECIPIENT_EMPTY", new CultureInfo(culture));
 
@@ -130,7 +130,7 @@ public class CreateNotificationTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("SERVICE_ID_EMPTY", new CultureInfo(culture));
 
@@ -148,7 +148,7 @@ public class CreateNotificationTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("BODY_OR_TEMPLATE_REQUIRED", new CultureInfo(culture));
 
@@ -166,7 +166,7 @@ public class CreateNotificationTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("NOTIFICATION_TYPE_INVALID", new CultureInfo(culture));
 
@@ -184,7 +184,7 @@ public class CreateNotificationTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("TITLE_EMPTY", new CultureInfo(culture));
 
@@ -202,7 +202,7 @@ public class CreateNotificationTest : NotificationClassFixture
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>();
+        var responseData = await response.Content.ReadFromJsonAsync<ErrorResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
 
         var expectedMessage = ResourceMessagesException.ResourceManager.GetString("TITLE_EMPTY", new CultureInfo(culture));
 
