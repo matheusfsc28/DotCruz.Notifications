@@ -3,10 +3,10 @@ using DotCruz.Notifications.CrossCutting.Settings;
 using DotCruz.Notifications.Domain.Entities.Notifications;
 using DotCruz.Notifications.Domain.Enums.Notifications;
 using DotCruz.Notifications.Domain.Interfaces;
+using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Net;
-using System.Net.Mail;
+using MimeKit;
 
 namespace DotCruz.Notifications.Infrastructure.Services.Senders;
 
@@ -31,22 +31,36 @@ public class EmailSenderStrategy : INotificationSenderStrategy
         
         _logger.LogInformation(ResourceLogMessages.SENDING_EMAIL, email.Recipient, email.Title);
 
-        using var client = new SmtpClient(_emailSettings.Host, _emailSettings.Port)
+        var message = BuildMessage(email);
+
+        using var client = new SmtpClient();
+
+        await ConfigureClientAsync(client, cancellationToken);
+
+        await client.SendAsync(message!, cancellationToken);
+        await client.DisconnectAsync(true, cancellationToken);
+    }
+
+    private MimeMessage? BuildMessage(EmailNotification email)
+    {
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress(_emailSettings.FromName, _emailSettings.FromEmail));
+        message.To.Add(new MailboxAddress(string.Empty, email.Recipient));
+        message.Subject = email.Title;
+
+        var bodyBuilder = new BodyBuilder
         {
-            Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password),
-            EnableSsl = _emailSettings.EnableSsl
+            HtmlBody = email.Body ?? string.Empty
         };
 
-        var mailMessage = new MailMessage
-        {
-            From = new MailAddress(_emailSettings.FromEmail, _emailSettings.FromName),
-            Subject = email.Title,
-            Body = email.Body ?? string.Empty,
-            IsBodyHtml = true
-        };
+        message.Body = bodyBuilder.ToMessageBody();
 
-        mailMessage.To.Add(email.Recipient);
+        return message;
+    }
 
-        await client.SendMailAsync(mailMessage, cancellationToken);
+    private async Task ConfigureClientAsync(SmtpClient client, CancellationToken cancellationToken)
+    {
+        await client.ConnectAsync(_emailSettings.Host, _emailSettings.Port, _emailSettings.EnableSsl, cancellationToken);
+        await client.AuthenticateAsync(_emailSettings.Username, _emailSettings.Password, cancellationToken);
     }
 }
