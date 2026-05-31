@@ -1,4 +1,5 @@
 using DotCruz.Notifications.CrossCutting.Settings;
+using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
 using DotCruz.Notifications.Domain.Interfaces;
 using DotCruz.Notifications.Domain.Interfaces.Repositories;
 using DotCruz.Notifications.Infrastructure.DataAccess;
@@ -58,7 +59,13 @@ public static class DependencyInjection
                     h.Password(rabbitMqSettings.Password);
                 });
 
-                cfg.UseMessageRetry(r => r.Incremental(3, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10)));
+                cfg.UseMessageRetry(r =>
+                {
+                    r.Incremental(3, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10));
+                    r.Ignore<NotFoundException>();
+                    r.Ignore<ErrorOnValidationException>();
+                    r.Ignore<NotificationTypeNotSupportedException>();
+                });
                 
                 cfg.ConfigureEndpoints(context);
             });

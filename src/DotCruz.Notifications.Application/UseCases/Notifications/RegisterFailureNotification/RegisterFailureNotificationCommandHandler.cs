@@ -1,4 +1,4 @@
-﻿using DotCruz.Notifications.CrossCutting.Resources;
+using DotCruz.Notifications.CrossCutting.Resources;
 using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
 using DotCruz.Notifications.Domain.Exceptions.Resources;
 using DotCruz.Notifications.Domain.Interfaces.Repositories;
@@ -24,8 +24,12 @@ public class RegisterFailureNotificationCommandHandler : IRequestHandler<Registe
     {
         _logger.LogCritical(ResourceLogMessages.NOTIFICATION_FAILED_DEFINITIVELY, request.NotificationId);
 
-        var notification = await _notificationRepository.GetByIdAsync(request.NotificationId, cancellationToken)
-            ?? throw new NotFoundException(ResourceMessagesException.NOTIFICATION_NOT_FOUND);
+        var notification = await _notificationRepository.GetByIdAsync(request.NotificationId, cancellationToken);
+        if (notification == null)
+        {
+            _logger.LogWarning(ResourceLogMessages.NOTIFICATION_NOT_FOUND, request.NotificationId);
+            return;
+        }
 
         notification.RegisterFailure(string.Join(" | ", request.ErrorsMessage));
 

@@ -133,18 +133,16 @@ public class SendNotificationCommandHandlerTests
     }
 
     [Fact]
-    public async Task Error_NotificationNotFound()
+    public async Task Success_NotificationNotFound_ShouldLogWarningAndReturnSilently()
     {
         var command = SendNotificationCommandBuilder.Build();
         var notificationRepository = new NotificationRepositoryBuilder().Build();
 
         var handler = CreateHandler(notificationRepository: notificationRepository);
 
-        Task act() => handler.Handle(command, TestContext.Current.CancellationToken);
+        await handler.Handle(command, TestContext.Current.CancellationToken);
 
-        var exception = await Assert.ThrowsAsync<NotFoundException>(act);
-
-        Assert.Contains(ResourceMessagesException.NOTIFICATION_NOT_FOUND, exception.GetErrorsMessages());
+        Mock.Get(notificationRepository).Verify(r => r.UpdateAsync(It.IsAny<DotCruz.Notifications.Domain.Entities.Notifications.Notification>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]

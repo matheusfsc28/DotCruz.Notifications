@@ -35,8 +35,12 @@ public class SendNotificationCommandHandler : IRequestHandler<SendNotificationCo
 
     public async Task Handle(SendNotificationCommand request, CancellationToken cancellationToken)
     {
-        var notification = await _notificationRepository.GetByIdAsync(request.NotificationId, cancellationToken)
-            ?? throw new NotFoundException(ResourceMessagesException.NOTIFICATION_NOT_FOUND);
+        var notification = await _notificationRepository.GetByIdAsync(request.NotificationId, cancellationToken);
+        if (notification == null)
+        {
+            _logger.LogWarning(ResourceLogMessages.NOTIFICATION_NOT_FOUND, request.NotificationId);
+            return;
+        }
 
         if (notification.Status == NotificationStatus.Sent || notification.Status == NotificationStatus.Processing)
         {

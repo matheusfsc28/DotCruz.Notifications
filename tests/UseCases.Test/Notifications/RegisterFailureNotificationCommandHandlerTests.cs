@@ -1,4 +1,4 @@
-﻿using CommonTestUtilities.Commands.Notifications;
+using CommonTestUtilities.Commands.Notifications;
 using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
 using DotCruz.Notifications.Application.UseCases.Notifications.RegisterFailureNotification;
@@ -37,7 +37,7 @@ public class RegisterFailureNotificationCommandHandlerTests
     }
 
     [Fact]
-    public async Task Error_NotificationNotFound()
+    public async Task Success_NotificationNotFound_ShouldLogWarningAndReturnSilently()
     {
         var command = RegisterFailureNotificationCommandBuilder.Build();
         var repository = new NotificationRepositoryBuilder().Build();
@@ -45,10 +45,8 @@ public class RegisterFailureNotificationCommandHandlerTests
         var logger = Mock.Of<ILogger<RegisterFailureNotificationCommandHandler>>();
         var handler = new RegisterFailureNotificationCommandHandler(repository, logger);
 
-        Task act() => handler.Handle(command, TestContext.Current.CancellationToken);
+        await handler.Handle(command, TestContext.Current.CancellationToken);
 
-        var exception = await Assert.ThrowsAsync<NotFoundException>(act);
-
-        Assert.Contains(ResourceMessagesException.NOTIFICATION_NOT_FOUND, exception.GetErrorsMessages());
+        Mock.Get(repository).Verify(r => r.UpdateAsync(It.IsAny<DotCruz.Notifications.Domain.Entities.Notifications.Notification>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }
