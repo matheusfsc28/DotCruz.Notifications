@@ -1,21 +1,33 @@
-using DotCruz.Notifications.Application.Events.Notifications;
-using DotCruz.Notifications.Domain.Entities.Notifications;
+using Amazon.SQS;
+using Amazon.SQS.Model;
+using DotCruz.Notifications.Application.Common.Interfaces;
+using DotCruz.Notifications.Contracts.Messages.Notifications.SendNotification;
+using DotCruz.Notifications.CrossCutting.Settings;
 using DotCruz.Notifications.Domain.Interfaces;
-using MassTransit;
+using Microsoft.Extensions.Options;
+using System.Text.Json;
 
 namespace DotCruz.Notifications.Infrastructure.Services.Messaging;
 
 public class PublishNotificationService : IPublishNotificationService
 {
-    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly IAmazonSQS _sqsClient;
+    private readonly string _queueUrl;
 
-    public PublishNotificationService(IPublishEndpoint publishEndpoint)
+    public PublishNotificationService(IAmazonSQS sqsClient, IOptions<AwsSettings> awsSettings)
     {
-        _publishEndpoint = publishEndpoint;
+        _sqsClient = sqsClient;
+        _queueUrl = awsSettings.Value.SqsQueueArn;
     }
 
-    public async Task PublishNotificationCreatedEvent(Notification notification, CancellationToken cancellationToken)
+    public async Task PublishNotificationCreatedEvent(SendNotificationMessage payload, CancellationToken cancellationToken)
     {
-        await _publishEndpoint.Publish(new NotificationCreatedEvent(notification.Id), cancellationToken);
+        var request = new SendMessageRequest
+        {
+            QueueUrl = _queueUrl,
+            MessageBody = JsonSerializer.Serialize(payload)
+        };
+
+        await _sqsClient.SendMessageAsync(request, cancellationToken);
     }
 }

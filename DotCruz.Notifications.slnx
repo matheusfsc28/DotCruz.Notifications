@@ -6,7 +6,6 @@
     <Project Path="src/DotCruz.Notifications.CrossCutting/DotCruz.Notifications.CrossCutting.csproj" Id="d6639de8-212c-40b1-bf91-7e47dae22524" />
     <Project Path="src/DotCruz.Notifications.Domain/DotCruz.Notifications.Domain.csproj" />
     <Project Path="src/DotCruz.Notifications.Infrastructure/DotCruz.Notifications.Infrastructure.csproj" Id="8bf7a457-91ad-4986-9c6f-b48928da1aae" />
-    <Project Path="src/DotCruz.Notifications.Worker/DotCruz.Notifications.Worker.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/CommonTestUtilities/CommonTestUtilities.csproj" Id="7256ea07-69e2-4076-8047-033cb2f47833" />
@@ -14,6 +13,5 @@
     <Project Path="tests/UseCases.Test/UseCases.Test.csproj" Id="b666c5ee-f17a-4100-b1fd-c901faf1f031" />
     <Project Path="tests/Validators.Test/Validators.Test.csproj" Id="ef4050e4-800d-48bb-9325-a7722782d9d4" />
     <Project Path="tests/WebApi.Test/WebApi.Test.csproj" Id="666ad5cf-b95d-43b7-945a-dbbef0b8c9b7" />
-    <Project Path="tests/Worker.Test/Worker.Test.csproj" />
   </Folder>
 </Solution>

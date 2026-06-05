@@ -1,7 +1,11 @@
-﻿using DotCruz.Notifications.Contracts.Enums.Notifications;
-using DotCruz.Notifications.Domain.Entities.Templates;
+using DotCruz.Notifications.Application.Common.Interfaces;
+using DotCruz.Notifications.Application.Common.Utils;
+using DotCruz.Notifications.Contracts.Enums.Notifications;
+using DotCruz.Notifications.Contracts.Messages.Notifications.SendNotification;
+using DotCruz.Notifications.Domain.Entities.Notifications;
 using DotCruz.Notifications.Domain.Enums.Notifications;
 using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
+using DotCruz.Notifications.Domain.Exceptions.Resources;
 using DotCruz.Notifications.Domain.Interfaces;
 using DotCruz.Notifications.Domain.Interfaces.Repositories;
 using MediatR;
@@ -14,29 +18,30 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
     private readonly ITemplateRepository _templateRepository;
     private readonly IEnumerable<INotificationFactoryStrategy> _factories;
     private readonly IPublishNotificationService _publishService;
+    private readonly ITemplateEngine _templateEngine;
+    private readonly INotificationScheduler _notificationScheduler;
 
     public CreateNotificationCommandHandler(
         INotificationRepository notificationRepository,
         ITemplateRepository templateRepository,
         IEnumerable<INotificationFactoryStrategy> factories,
-        IPublishNotificationService publishService)
+        IPublishNotificationService publishService,
+        ITemplateEngine templateEngine,
+        INotificationScheduler notificationScheduler)
     {
         _notificationRepository = notificationRepository;
         _templateRepository = templateRepository;
         _factories = factories;
         _publishService = publishService;
+        _templateEngine = templateEngine;
+        _notificationScheduler = notificationScheduler;
     }
 
     public async Task<Guid> Handle(CreateNotificationCommand request, CancellationToken cancellationToken)
     {
         var message = request.Message;
-        Guid? resolvedTemplateId = null;
 
-        if (!string.IsNullOrWhiteSpace(message.TemplateCode))
-        {
-            var template = await ResolveTemplateAsync(message.TemplateCode, message.Culture, cancellationToken);
-            resolvedTemplateId = template?.Id;
-        }
+        var resolvedTemplateId = await ResolveTemplateAsync(message.TemplateCode, message.Culture, cancellationToken);
 
         var domainType = MapToDomainType(message.Type);
 
@@ -53,16 +58,60 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
             message.TemplateData,
             message.ScheduledFor);
 
+        await ProcessTemplateAsync(notification, cancellationToken);
+
         await _notificationRepository.AddAsync(notification, cancellationToken);
-        
-        if (notification.ScheduledFor == null || notification.ScheduledFor <= DateTimeOffset.UtcNow)
-            await _publishService.PublishNotificationCreatedEvent(notification, cancellationToken);
+
+        await SendNotification(notification, message.Type, cancellationToken);
 
         return notification.Id;
     }
 
-    private async Task<Template?> ResolveTemplateAsync(string code, string? culture, CancellationToken cancellationToken)
+    private async Task ProcessTemplateAsync(Notification notification, CancellationToken cancellationToken)
     {
+        var (rawTitle, rawBody) = await GetRawContent(notification, cancellationToken);
+
+        if (!string.IsNullOrWhiteSpace(rawTitle))
+        {
+            var renderedTitle = _templateEngine.Render(rawTitle, notification.TemplateData);
+            notification.SetRenderedTitle(renderedTitle);
+        }
+
+        if (!string.IsNullOrWhiteSpace(rawBody))
+        {
+            var renderedBody = _templateEngine.Render(rawBody, notification.TemplateData);
+
+            if (notification.Type == NotificationType.Email)
+                renderedBody = EmailTemplateWrapper.Wrap(renderedBody);
+
+            notification.SetRenderedBody(renderedBody);
+        }
+    }
+
+    private async Task<(string Title, string Body)> GetRawContent(Notification notification, CancellationToken cancellationToken)
+    {
+        if (notification.TemplateId.HasValue)
+        {
+            var template = await _templateRepository.GetByIdAsync(notification.TemplateId.Value, cancellationToken);
+            if (template != null)
+                return (template.DefaultTitle, template.Body);
+        }
+
+        var title = notification switch
+        {
+            EmailNotification e => e.Title,
+            PushNotification p => p.Title,
+            _ => string.Empty
+        };
+
+        return (title!, notification.Body!);
+    }
+
+    private async Task<Guid?> ResolveTemplateAsync(string? code, string? culture, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(code))
+            return null;
+
         var template = await _templateRepository.GetByCodeAsync(code, culture ?? "pt-BR", cancellationToken);
         
         if (template == null && culture != "pt-BR")
@@ -71,7 +120,10 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
         if (template == null && culture != "en" && culture != "pt-BR")
             template = await _templateRepository.GetByCodeAsync(code, "en", cancellationToken);
 
-        return template;
+        if (template == null)
+            throw new NotFoundException(ResourceMessagesException.TEMPLATE_NOT_FOUND);
+
+        return template.Id;
     }
 
     private static NotificationType MapToDomainType(IntegrationNotificationType type)
@@ -83,5 +135,31 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
             IntegrationNotificationType.Push => NotificationType.Push,
             _ => throw new NotificationTypeNotSupportedException()
         };
+    }
+
+    private async Task SendNotification(Notification notification, IntegrationNotificationType type, CancellationToken cancellationToken)
+    {
+        var messagePayload = BuildNotificationMessage(notification, type);
+
+        if (notification.ScheduledFor.HasValue && notification.ScheduledFor.Value > DateTimeOffset.UtcNow)
+        {
+            await _notificationScheduler.ScheduleAsync(messagePayload, notification.ScheduledFor.Value, cancellationToken);
+        }
+        else
+        {
+            await _publishService.PublishNotificationCreatedEvent(messagePayload, cancellationToken);
+        }
+    }
+
+    private static SendNotificationMessage BuildNotificationMessage(Notification notification, IntegrationNotificationType type)
+    {
+        var title = notification switch
+        {
+            EmailNotification e => e.Title,
+            PushNotification p => p.Title,
+            _ => null
+        };
+
+        return new SendNotificationMessage(notification.Id, type, notification.Recipient, notification.Body!, title);
     }
 }

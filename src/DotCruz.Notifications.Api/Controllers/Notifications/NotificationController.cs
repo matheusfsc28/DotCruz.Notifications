@@ -1,7 +1,9 @@
-﻿using DotCruz.Notifications.Api.Controllers.Base;
+using DotCruz.Notifications.Api.Controllers.Base;
 using DotCruz.Notifications.Application.DTOs.Base;
 using DotCruz.Notifications.Application.UseCases.Notifications.CreateNotification;
+using DotCruz.Notifications.Application.UseCases.Notifications.UpdateNotificationStatus;
 using DotCruz.Notifications.Contracts.Messages.Notifications.CreateNotification;
+using DotCruz.Notifications.Contracts.Messages.Notifications.UpdateNotificationStatus;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,5 +21,14 @@ public class NotificationController : DotCruzNotificationBaseController
         var result = await _mediator.Send(new CreateNotificationCommand(request), cancellationToken);
 
         return Created("", result);
+    }
+
+    [HttpPatch("{Id}/status")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Patch(Guid Id, [FromBody] UpdateNotificationStatusRequest request, CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new UpdateNotificationStatusCommand(Id, request), cancellationToken);
+        return NoContent();
     }
 }

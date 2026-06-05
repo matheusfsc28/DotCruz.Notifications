@@ -1,0 +1,17 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DotCruz.Notifications.CrossCutting.Settings;
+
+public class AwsSettings
+{
+    [Required]
+    public string Region { get; set; } = string.Empty;
+    [Required]
+    public string AccessKey { get; set; } = string.Empty;
+    [Required]
+    public string SecretKey { get; set; } = string.Empty;
+    [Required]
+    public string SqsQueueArn { get; set; } = string.Empty;
+    [Required]
+    public string SchedulerRoleArn { get; set; } = string.Empty;
+}

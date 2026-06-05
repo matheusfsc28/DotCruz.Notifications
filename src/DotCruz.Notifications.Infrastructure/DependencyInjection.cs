@@ -1,16 +1,15 @@
+using Amazon.Scheduler;
+using Amazon.SQS;
+using DotCruz.Notifications.Application.Common.Interfaces;
 using DotCruz.Notifications.CrossCutting.Settings;
-using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
 using DotCruz.Notifications.Domain.Interfaces;
 using DotCruz.Notifications.Domain.Interfaces.Repositories;
 using DotCruz.Notifications.Infrastructure.DataAccess;
 using DotCruz.Notifications.Infrastructure.DataAccess.Mappings;
 using DotCruz.Notifications.Infrastructure.DataAccess.Repositories;
 using DotCruz.Notifications.Infrastructure.Services.Messaging;
-using DotCruz.Notifications.Infrastructure.Services.Senders;
-using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.Reflection;
 
@@ -20,8 +19,8 @@ public static class DependencyInjection
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration, Assembly? consumerAssembly = null)
     {
-        AddMassTransit(services, configuration, consumerAssembly);
-        AddExternalServices(services, configuration);
+        ConfigureAwsSdk(services, configuration);
+        AddExternalServices(services);
         AddMongoDb(services, configuration);
         AddRepositories(services);
     }
@@ -32,43 +31,44 @@ public static class DependencyInjection
         services.AddScoped<ITemplateRepository, TemplateRepository>();
     }
 
-    private static void AddExternalServices(IServiceCollection services, IConfiguration configuration)
+    private static void AddExternalServices(IServiceCollection services)
     {
         services.AddScoped<IPublishNotificationService, PublishNotificationService>();
-        
-        services.AddScoped<INotificationSenderStrategy, EmailSenderStrategy>();
-        services.AddScoped<INotificationSenderStrategy, SmsSenderStrategy>();
-        services.AddScoped<INotificationSenderStrategy, PushSenderStrategy>();
+        services.AddScoped<INotificationScheduler, EventBridgeNotificationScheduler>();
     }
 
-    private static void AddMassTransit(IServiceCollection services, IConfiguration configuration, Assembly? consumerAssembly)
+    private static void ConfigureAwsSdk(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddMassTransit(busConfigurator =>
+        var awsSettings = configuration.GetSection("Settings:AWS").Get<AwsSettings>();
+
+        services.AddSingleton<IAmazonSQS>(sp =>
         {
-            if (consumerAssembly != null)
-                busConfigurator.AddConsumers(consumerAssembly);
-
-            busConfigurator.UsingRabbitMq((context, cfg) =>
+            var config = new AmazonSQSConfig
             {
-                var rabbitMqSettings = configuration.GetSection("Settings:RabbitMqSettings").Get<RabbitMqSettings>()
-                ?? throw new Exception("RabbitMqSettings not found in configuration."); ;
+                RegionEndpoint = Amazon.RegionEndpoint.GetBySystemName(awsSettings!.Region),
+            };
 
-                cfg.Host(rabbitMqSettings.Host, (ushort)rabbitMqSettings.Port, "/", h =>
-                {
-                    h.Username(rabbitMqSettings.Username);
-                    h.Password(rabbitMqSettings.Password);
-                });
+            if (!string.IsNullOrEmpty(awsSettings.AccessKey) && !string.IsNullOrEmpty(awsSettings.SecretKey))
+            {
+                return new AmazonSQSClient(awsSettings.AccessKey, awsSettings.SecretKey, config);
+            }
 
-                cfg.UseMessageRetry(r =>
-                {
-                    r.Incremental(3, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10));
-                    r.Ignore<NotFoundException>();
-                    r.Ignore<ErrorOnValidationException>();
-                    r.Ignore<NotificationTypeNotSupportedException>();
-                });
-                
-                cfg.ConfigureEndpoints(context);
-            });
+            return new AmazonSQSClient(config);
+        });
+
+        services.AddSingleton<IAmazonScheduler>(sp =>
+        {
+            var config = new AmazonSchedulerConfig
+            {
+                RegionEndpoint = Amazon.RegionEndpoint.GetBySystemName(awsSettings!.Region)
+            };
+
+            if (!string.IsNullOrEmpty(awsSettings.AccessKey) && !string.IsNullOrEmpty(awsSettings.SecretKey))
+            {
+                return new AmazonSchedulerClient(awsSettings.AccessKey, awsSettings.SecretKey, config);
+            }
+
+            return new AmazonSchedulerClient(config);
         });
     }
 
@@ -86,7 +86,7 @@ public static class DependencyInjection
             mongoClientSettings.ConnectTimeout = TimeSpan.FromSeconds(10);
 
             return new MongoClient(mongoClientSettings);
-        });
+        }); 
 
         services.AddSingleton<NotificationDbContext>();
     }

@@ -153,4 +153,13 @@
   <data name="NOTIFICATION_FAILED_DEFINITIVELY" xml:space="preserve">
     <value>Notification {0} failed definitively after all retry attempts. Registering failure.</value>
   </data>
+  <data name="NOTIFICATION_NOT_FOUND_TO_UPDATE_STATUS" xml:space="preserve">
+    <value>Notification {0} not found to update status.</value>
+  </data>
+  <data name="NOTIFICATION_DELIVERED" xml:space="preserve">
+    <value>Notification {0} successfully delivered.</value>
+  </data>
+  <data name="NOTIFICATION_DELIVERY_FAILED" xml:space="preserve">
+    <value>Notification {0} delivery failed: {1}</value>
+  </data>
 </root>

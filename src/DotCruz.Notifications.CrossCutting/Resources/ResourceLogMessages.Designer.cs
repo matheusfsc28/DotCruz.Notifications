@@ -106,6 +106,24 @@ namespace DotCruz.Notifications.CrossCutting.Resources {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Notification {0} successfully delivered..
+        /// </summary>
+        public static string NOTIFICATION_DELIVERED {
+            get {
+                return ResourceManager.GetString("NOTIFICATION_DELIVERED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Notification {0} delivery failed: {1}.
+        /// </summary>
+        public static string NOTIFICATION_DELIVERY_FAILED {
+            get {
+                return ResourceManager.GetString("NOTIFICATION_DELIVERY_FAILED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Notification {0} failed definitively after all retry attempts. Registering failure..
         /// </summary>
         public static string NOTIFICATION_FAILED_DEFINITIVELY {
@@ -120,6 +138,15 @@ namespace DotCruz.Notifications.CrossCutting.Resources {
         public static string NOTIFICATION_NOT_FOUND {
             get {
                 return ResourceManager.GetString("NOTIFICATION_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Notification {0} not found to update status..
+        /// </summary>
+        public static string NOTIFICATION_NOT_FOUND_TO_UPDATE_STATUS {
+            get {
+                return ResourceManager.GetString("NOTIFICATION_NOT_FOUND_TO_UPDATE_STATUS", resourceCulture);
             }
         }
         
