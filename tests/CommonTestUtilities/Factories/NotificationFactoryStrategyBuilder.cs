@@ -25,7 +25,8 @@ public class NotificationFactoryStrategyBuilder
             It.IsAny<string>(),
             It.IsAny<Guid?>(),
             It.IsAny<Dictionary<string, object>>(),
-            It.IsAny<DateTimeOffset?>()
+            It.IsAny<DateTimeOffset?>(),
+            It.IsAny<Guid>()
         )).Returns(notification);
 
         return this;

@@ -16,7 +16,8 @@ public class PushFactoryStrategy : INotificationFactoryStrategy
         string? title,
         Guid? templateId,
         Dictionary<string, object>? templateData,
-        DateTimeOffset? scheduledFor)
+        DateTimeOffset? scheduledFor,
+        Guid tenantId)
     {
         return new PushNotification(
             serviceId,
@@ -26,6 +27,7 @@ public class PushFactoryStrategy : INotificationFactoryStrategy
             body,
             templateId,
             templateData,
-            scheduledFor);
+            scheduledFor,
+            tenantId);
     }
 }

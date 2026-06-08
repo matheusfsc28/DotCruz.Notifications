@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.7.400.56" />
     <PackageReference Include="AWSSDK.SQS" Version="3.7.400.56" />
     <PackageReference Include="AWSSDK.Scheduler" Version="3.7.400.56" />
     <PackageReference Include="MailKit" Version="4.17.0" />

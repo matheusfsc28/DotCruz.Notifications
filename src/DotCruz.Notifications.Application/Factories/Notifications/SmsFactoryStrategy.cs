@@ -16,7 +16,8 @@ public class SmsFactoryStrategy : INotificationFactoryStrategy
         string? title,
         Guid? templateId,
         Dictionary<string, object>? templateData,
-        DateTimeOffset? scheduledFor)
+        DateTimeOffset? scheduledFor,
+        Guid tenantId)
     {
         return new SmsNotification(
             serviceId,
@@ -25,6 +26,7 @@ public class SmsFactoryStrategy : INotificationFactoryStrategy
             body,
             templateId,
             templateData,
-            scheduledFor);
+            scheduledFor,
+            tenantId);
     }
 }

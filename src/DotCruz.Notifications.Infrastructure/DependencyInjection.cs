@@ -1,4 +1,5 @@
 using Amazon.Scheduler;
+using Amazon.SimpleSystemsManagement;
 using Amazon.SQS;
 using DotCruz.Notifications.Application.Common.Interfaces;
 using DotCruz.Notifications.CrossCutting.Settings;
@@ -29,12 +30,14 @@ public static class DependencyInjection
     {
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<ITemplateRepository, TemplateRepository>();
+        services.AddScoped<ITenantSettingsRepository, TenantSettingsRepository>();
     }
 
     private static void AddExternalServices(IServiceCollection services)
     {
         services.AddScoped<IPublishNotificationService, PublishNotificationService>();
         services.AddScoped<INotificationScheduler, EventBridgeNotificationScheduler>();
+        services.AddScoped<ISmtpConfigService, SmtpConfigService>();
     }
 
     private static void ConfigureAwsSdk(IServiceCollection services, IConfiguration configuration)
@@ -69,6 +72,21 @@ public static class DependencyInjection
             }
 
             return new AmazonSchedulerClient(config);
+        });
+
+        services.AddSingleton<IAmazonSimpleSystemsManagement>(sp =>
+        {
+            var config = new AmazonSimpleSystemsManagementConfig
+            {
+                RegionEndpoint = Amazon.RegionEndpoint.GetBySystemName(awsSettings!.Region)
+            };
+
+            if (!string.IsNullOrEmpty(awsSettings.AccessKey) && !string.IsNullOrEmpty(awsSettings.SecretKey))
+            {
+                return new AmazonSimpleSystemsManagementClient(awsSettings.AccessKey, awsSettings.SecretKey, config);
+            }
+
+            return new AmazonSimpleSystemsManagementClient(config);
         });
     }
 

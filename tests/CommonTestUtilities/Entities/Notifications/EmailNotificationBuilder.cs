@@ -13,7 +13,8 @@ public class EmailNotificationBuilder
         string? body = null,
         Guid? templateId = null,
         Dictionary<string, object>? templateData = null,
-        DateTimeOffset? scheduledFor = null)
+        DateTimeOffset? scheduledFor = null,
+        Guid? tenantId = null)
     {
         var f = new Faker();
 
@@ -28,7 +29,8 @@ public class EmailNotificationBuilder
             body: body,
             templateId: templateId,
             templateData: templateData,
-            scheduledFor: scheduledFor ?? f.Date.FutureOffset()
+            scheduledFor: scheduledFor ?? f.Date.FutureOffset(),
+            tenantId: tenantId ?? f.Random.Guid()
         );
     }
 }

@@ -11,7 +11,8 @@ public class TemplateBuilder
         string? culture = null,
         string? defaultTitle = null,
         string? body = null,
-        NotificationType? type = null)
+        NotificationType? type = null,
+        Guid? tenantId = null)
     {
         var faker = new Faker<Template>()
             .CustomInstantiator(f => new Template(
@@ -19,7 +20,8 @@ public class TemplateBuilder
                     culture: culture ?? f.PickRandom("pt-BR", "en-US", "es-ES"),
                     defaultTitle: defaultTitle ?? f.Lorem.Sentence(),
                     body: body ?? f.Lorem.Paragraph(),
-                    type: type ?? f.PickRandom<NotificationType>()
+                    type: type ?? f.PickRandom<NotificationType>(),
+                    tenantId: tenantId ?? f.Random.Guid()
                 )
             );
 

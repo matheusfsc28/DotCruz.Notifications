@@ -12,7 +12,8 @@ public class SmsNotificationBuilder
         string? body = null,
         Guid? templateId = null,
         Dictionary<string, object>? templateData = null,
-        DateTimeOffset? scheduledFor = null)
+        DateTimeOffset? scheduledFor = null,
+        Guid? tenantId = null)
     {
         var faker = new Faker<SmsNotification>()
             .CustomInstantiator(f => new SmsNotification(
@@ -22,7 +23,8 @@ public class SmsNotificationBuilder
                     body: body ?? f.Lorem.Paragraph(),
                     templateId: templateId,
                     templateData: templateData,
-                    scheduledFor: scheduledFor ?? f.Date.FutureOffset()
+                    scheduledFor: scheduledFor ?? f.Date.FutureOffset(),
+                    tenantId: tenantId ?? f.Random.Guid()
                 )
             );
 

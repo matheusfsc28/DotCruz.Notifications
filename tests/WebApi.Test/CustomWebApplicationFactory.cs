@@ -1,9 +1,11 @@
-﻿using CommonTestUtilities.Entities;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.Entities.Templates;
+using DotCruz.Notifications.Application.Common.Interfaces;
 using DotCruz.Notifications.CrossCutting.Settings;
 using DotCruz.Notifications.Domain.Entities.Notifications;
 using DotCruz.Notifications.Domain.Entities.Templates;
 using DotCruz.Notifications.Domain.Enums.Notifications;
+using DotCruz.Notifications.Domain.Interfaces;
 using DotCruz.Notifications.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -16,6 +18,7 @@ namespace WebApi.Test;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
+    public Guid TenantId { get; } = Guid.NewGuid();
     private Template _template = default!;
     private Notification _notification = default!;
     private string _apiToken = default!;
@@ -38,6 +41,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 RemoveService<IMongoClient>(services);
                 RemoveService<IOptions<MongoDbSettings>>(services);
                 RemoveService<NotificationDbContext>(services);
+                RemoveService<IPublishNotificationService>(services);
+                RemoveService<INotificationScheduler>(services);
 
                 var mongoClient = new MongoClient(_databaseConnectionString);
                 services.AddSingleton<IMongoClient>(mongoClient);
@@ -48,6 +53,12 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 });
 
                 services.AddSingleton<NotificationDbContext>();
+
+                var publishServiceMock = new Moq.Mock<IPublishNotificationService>();
+                var schedulerMock = new Moq.Mock<INotificationScheduler>();
+
+                services.AddSingleton(publishServiceMock.Object);
+                services.AddSingleton(schedulerMock.Object);
 
                 using var scope = services.BuildServiceProvider().CreateScope();
                 var dbContext = scope.ServiceProvider.GetRequiredService<NotificationDbContext>();
@@ -70,8 +81,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
     private void StartDatabase(NotificationDbContext dbContext)
     {
-        _template = TemplateBuilder.Build(culture: "pt-BR");
-        _notification = NotificationBuilder.Build(NotificationType.Email);
+        _template = TemplateBuilder.Build(culture: "pt-BR", tenantId: TenantId);
+        _notification = NotificationBuilder.Build(NotificationType.Email, tenantId: TenantId);
 
         dbContext.Templates.InsertOne(_template);
         dbContext.Notifications.InsertOne(_notification);

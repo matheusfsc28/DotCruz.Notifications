@@ -14,5 +14,6 @@ public interface INotificationFactoryStrategy
         string? title,
         Guid? templateId,
         Dictionary<string, object>? templateData,
-        DateTimeOffset? scheduledFor);
+        DateTimeOffset? scheduledFor,
+        Guid tenantId);
 }

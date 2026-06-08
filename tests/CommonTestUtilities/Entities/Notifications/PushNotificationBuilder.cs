@@ -13,7 +13,8 @@ public class PushNotificationBuilder
         string? body = null,
         Guid? templateId = null,
         Dictionary<string, object>? templateData = null,
-        DateTimeOffset? scheduledFor = null)
+        DateTimeOffset? scheduledFor = null,
+        Guid? tenantId = null)
     {
         var faker = new Faker<PushNotification>()
             .CustomInstantiator(f => new PushNotification(
@@ -24,7 +25,8 @@ public class PushNotificationBuilder
                     body: body ?? f.Lorem.Paragraph(),
                     templateId: templateId,
                     templateData: templateData,
-                    scheduledFor: scheduledFor ?? f.Date.FutureOffset()
+                    scheduledFor: scheduledFor ?? f.Date.FutureOffset(),
+                    tenantId: tenantId ?? f.Random.Guid()
                 )
             );
 

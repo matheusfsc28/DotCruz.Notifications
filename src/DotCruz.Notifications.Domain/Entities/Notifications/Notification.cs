@@ -6,7 +6,7 @@ using DotCruz.Notifications.Domain.ValueObjects.Notifications;
 
 namespace DotCruz.Notifications.Domain.Entities.Notifications;
 
-public abstract class Notification : BaseEntity
+public abstract class Notification : TenantEntity
 {
     public Guid ServiceId { get; private set; }
     public string? CallerReferenceId { get; private set; }
@@ -30,7 +30,7 @@ public abstract class Notification : BaseEntity
 
     protected Notification() { }
 
-    protected Notification(Guid serviceId, NotificationType type, string recipient, string? culture, string? body, Guid? templateId, Dictionary<string, object>? templateData, DateTimeOffset? scheduledFor)
+    protected Notification(Guid serviceId, NotificationType type, string recipient, string? culture, string? body, Guid? templateId, Dictionary<string, object>? templateData, DateTimeOffset? scheduledFor, Guid tenantId)
     {
         ServiceId = serviceId;
         Type = type;
@@ -40,6 +40,7 @@ public abstract class Notification : BaseEntity
         TemplateId = templateId;
         TemplateData = templateData;
         ScheduledFor = scheduledFor;
+        SetTenantId(tenantId);
     }
 
     public void SetRenderedBody(string body)

@@ -17,8 +17,9 @@ public class EmailNotification : Notification
         string? body,
         Guid? templateId,
         Dictionary<string, object>? templateData,
-        DateTimeOffset? scheduledFor)
-        : base(serviceId, NotificationType.Email, recipient, culture, body, templateId, templateData, scheduledFor)
+        DateTimeOffset? scheduledFor,
+        Guid tenantId)
+        : base(serviceId, NotificationType.Email, recipient, culture, body, templateId, templateData, scheduledFor, tenantId)
     {
         Title = title;
         Validate();

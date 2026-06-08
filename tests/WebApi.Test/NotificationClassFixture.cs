@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Headers;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 namespace WebApi.Test;
@@ -6,9 +6,13 @@ namespace WebApi.Test;
 public class NotificationClassFixture : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly HttpClient _httpClient;
+    private readonly CustomWebApplicationFactory _factory;
 
     public NotificationClassFixture(CustomWebApplicationFactory factory)
-        => _httpClient = factory.CreateClient();
+    {
+        _httpClient = factory.CreateClient();
+        _factory = factory;
+    }
 
     protected async Task<HttpResponseMessage> DoPost(
         string endpoint,
@@ -48,10 +52,12 @@ public class NotificationClassFixture : IClassFixture<CustomWebApplicationFactor
     private void AuthorizeRequest(string token)
     {
         _httpClient.DefaultRequestHeaders.Remove("X-Api-Key");
+        _httpClient.DefaultRequestHeaders.Remove("X-Tenant-ID");
 
         if (string.IsNullOrWhiteSpace(token))
             return;
 
         _httpClient.DefaultRequestHeaders.Add("X-Api-Key", token);
+        _httpClient.DefaultRequestHeaders.Add("X-Tenant-ID", _factory.TenantId.ToString());
     }
 }

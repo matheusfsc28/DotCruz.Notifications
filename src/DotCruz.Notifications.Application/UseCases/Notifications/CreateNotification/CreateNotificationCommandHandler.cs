@@ -16,25 +16,31 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
 {
     private readonly INotificationRepository _notificationRepository;
     private readonly ITemplateRepository _templateRepository;
+    private readonly ITenantSettingsRepository _tenantSettingsRepository;
     private readonly IEnumerable<INotificationFactoryStrategy> _factories;
     private readonly IPublishNotificationService _publishService;
     private readonly ITemplateEngine _templateEngine;
     private readonly INotificationScheduler _notificationScheduler;
+    private readonly ITenantProvider _tenantProvider;
 
     public CreateNotificationCommandHandler(
         INotificationRepository notificationRepository,
         ITemplateRepository templateRepository,
+        ITenantSettingsRepository tenantSettingsRepository,
         IEnumerable<INotificationFactoryStrategy> factories,
         IPublishNotificationService publishService,
         ITemplateEngine templateEngine,
-        INotificationScheduler notificationScheduler)
+        INotificationScheduler notificationScheduler,
+        ITenantProvider tenantProvider)
     {
         _notificationRepository = notificationRepository;
         _templateRepository = templateRepository;
+        _tenantSettingsRepository = tenantSettingsRepository;
         _factories = factories;
         _publishService = publishService;
         _templateEngine = templateEngine;
         _notificationScheduler = notificationScheduler;
+        _tenantProvider = tenantProvider;
     }
 
     public async Task<Guid> Handle(CreateNotificationCommand request, CancellationToken cancellationToken)
@@ -48,6 +54,10 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
         var factory = _factories.FirstOrDefault(f => f.Type == domainType)
             ?? throw new NotificationTypeNotSupportedException();
 
+        var tenantId = _tenantProvider.TenantId;
+        if (!tenantId.HasValue)
+            throw new UnauthorizedException(ResourceMessagesException.TENANT_ID_REQUIRED);
+
         var notification = factory.Create(
             message.ServiceId,
             message.Recipient,
@@ -56,7 +66,8 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
             message.Title,
             resolvedTemplateId,
             message.TemplateData,
-            message.ScheduledFor);
+            message.ScheduledFor,
+            tenantId.Value);
 
         await ProcessTemplateAsync(notification, cancellationToken);
 
@@ -82,7 +93,21 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
             var renderedBody = _templateEngine.Render(rawBody, notification.TemplateData);
 
             if (notification.Type == NotificationType.Email)
-                renderedBody = EmailTemplateWrapper.Wrap(renderedBody);
+            {
+                var wrapped = false;
+                if (notification.TenantId != Guid.Empty)
+                {
+                    var tenantSettings = await _tenantSettingsRepository.GetByTenantIdAsync(notification.TenantId, cancellationToken);
+                    if (tenantSettings != null && (!string.IsNullOrEmpty(tenantSettings.HeaderHtml) || !string.IsNullOrEmpty(tenantSettings.FooterHtml)))
+                    {
+                        renderedBody = $"{tenantSettings.HeaderHtml}{renderedBody}{tenantSettings.FooterHtml}";
+                        wrapped = true;
+                    }
+                }
+
+                if (!wrapped)
+                    renderedBody = EmailTemplateWrapper.Wrap(renderedBody);
+            }
 
             notification.SetRenderedBody(renderedBody);
         }
@@ -113,12 +138,22 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
             return null;
 
         var template = await _templateRepository.GetByCodeAsync(code, culture ?? "pt-BR", cancellationToken);
+        if (template == null && _tenantProvider.TenantId.HasValue)
+            template = await _templateRepository.GetGlobalByCodeAsync(code, culture ?? "pt-BR", cancellationToken);
         
         if (template == null && culture != "pt-BR")
+        {
             template = await _templateRepository.GetByCodeAsync(code, "pt-BR", cancellationToken);
+            if (template == null && _tenantProvider.TenantId.HasValue)
+                template = await _templateRepository.GetGlobalByCodeAsync(code, "pt-BR", cancellationToken);
+        }
 
         if (template == null && culture != "en" && culture != "pt-BR")
+        {
             template = await _templateRepository.GetByCodeAsync(code, "en", cancellationToken);
+            if (template == null && _tenantProvider.TenantId.HasValue)
+                template = await _templateRepository.GetGlobalByCodeAsync(code, "en", cancellationToken);
+        }
 
         if (template == null)
             throw new NotFoundException(ResourceMessagesException.TEMPLATE_NOT_FOUND);
@@ -160,6 +195,6 @@ public class CreateNotificationCommandHandler : IRequestHandler<CreateNotificati
             _ => null
         };
 
-        return new SendNotificationMessage(notification.Id, type, notification.Recipient, notification.Body!, title);
+        return new SendNotificationMessage(notification.Id, type, notification.Recipient, notification.Body!, title, notification.TenantId);
     }
 }

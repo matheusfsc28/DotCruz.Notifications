@@ -5,7 +5,7 @@ using DotCruz.Notifications.Domain.Exceptions.Resources;
 
 namespace DotCruz.Notifications.Domain.Entities.Templates;
 
-public class Template : BaseEntity
+public class Template : TenantEntity
 {
     public string Code { get; private set; } = string.Empty;
     public string Culture { get; private set; } = "pt-BR";
@@ -15,24 +15,27 @@ public class Template : BaseEntity
 
     private Template() { }
 
-    public Template(string code, string culture, string defaultTitle, string body, NotificationType type)
+    public Template(string code, string culture, string defaultTitle, string body, NotificationType type, Guid tenantId)
     {
         Code = code;
         Culture = !string.IsNullOrEmpty(culture) ? culture : Culture;
         DefaultTitle = defaultTitle;
         Body = body;
         Type = type;
+        SetTenantId(tenantId);
 
         Validate();
     }
 
-    public void Update(string? code, string? culture, string? defaultTitle, string? body, NotificationType? type)
+    public void Update(string? code, string? culture, string? defaultTitle, string? body, NotificationType? type, Guid? tenantId = null)
     {
         Code = !string.IsNullOrEmpty(code) ? code : Code;
         Culture = !string.IsNullOrEmpty(culture) ? culture : Culture;
         DefaultTitle = !string.IsNullOrEmpty(defaultTitle) ? defaultTitle : DefaultTitle;
         Body = !string.IsNullOrEmpty(body) ? body : Body;
         Type = type ?? Type;
+        if (tenantId.HasValue)
+            SetTenantId(tenantId.Value);
 
         Validate();
     }

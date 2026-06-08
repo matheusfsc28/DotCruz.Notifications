@@ -14,4 +14,6 @@ public class AwsSettings
     public string SqsQueueArn { get; set; } = string.Empty;
     [Required]
     public string SchedulerRoleArn { get; set; } = string.Empty;
+    [Required]
+    public string SmtpParameterPath { get; set; } = string.Empty;
 }

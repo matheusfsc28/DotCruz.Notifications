@@ -16,7 +16,8 @@ public class EmailFactoryStrategy : INotificationFactoryStrategy
         string? title,
         Guid? templateId,
         Dictionary<string, object>? templateData,
-        DateTimeOffset? scheduledFor)
+        DateTimeOffset? scheduledFor,
+        Guid tenantId)
     {
         return new EmailNotification(
             serviceId,
@@ -26,6 +27,7 @@ public class EmailFactoryStrategy : INotificationFactoryStrategy
             body,
             templateId,
             templateData,
-            scheduledFor);
+            scheduledFor,
+            tenantId);
     }
 }

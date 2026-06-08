@@ -4,6 +4,8 @@ using CommonTestUtilities.Repositories;
 using DotCruz.Notifications.Application.UseCases.Templates.CreateTemplate;
 using DotCruz.Notifications.Domain.Exceptions.BaseExceptions;
 using DotCruz.Notifications.Domain.Exceptions.Resources;
+using DotCruz.Notifications.Domain.Interfaces;
+using Moq;
 
 namespace UseCases.Test.Templates;
 
@@ -14,7 +16,9 @@ public class CreateTemplateCommandHandlerTests
     {
         var command = CreateTemplateCommandBuilder.Build();
         var repository = new TemplateRepositoryBuilder().Build();
-        var handler = new CreateTemplateCommandHandler(repository);
+        var tenantProvider = new Mock<ITenantProvider>();
+        tenantProvider.Setup(t => t.TenantId).Returns(Guid.NewGuid());
+        var handler = new CreateTemplateCommandHandler(repository, tenantProvider.Object);
 
         var result = await handler.Handle(command, TestContext.Current.CancellationToken);
 
@@ -31,7 +35,9 @@ public class CreateTemplateCommandHandlerTests
             .GetByCode(existingTemplate)
             .Build();
             
-        var handler = new CreateTemplateCommandHandler(repository);
+        var tenantProvider = new Mock<ITenantProvider>();
+        tenantProvider.Setup(t => t.TenantId).Returns(Guid.NewGuid());
+        var handler = new CreateTemplateCommandHandler(repository, tenantProvider.Object);
 
         Task act() => handler.Handle(command, TestContext.Current.CancellationToken);
 

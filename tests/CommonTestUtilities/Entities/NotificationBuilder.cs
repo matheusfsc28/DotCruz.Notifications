@@ -10,13 +10,14 @@ public class NotificationBuilder
         NotificationType type, 
         Guid? templateId = null,
         Dictionary<string, object>? templateData = null,
-        string? body = null)
+        string? body = null,
+        Guid? tenantId = null)
     {
         return type switch
         {
-            NotificationType.Email => EmailNotificationBuilder.Build(templateId: templateId, templateData: templateData, body: body),
-            NotificationType.Sms => SmsNotificationBuilder.Build(templateId: templateId, templateData: templateData, body: body),
-            NotificationType.Push => PushNotificationBuilder.Build(templateId: templateId, templateData: templateData, body: body),
+            NotificationType.Email => EmailNotificationBuilder.Build(templateId: templateId, templateData: templateData, body: body, tenantId: tenantId),
+            NotificationType.Sms => SmsNotificationBuilder.Build(templateId: templateId, templateData: templateData, body: body, tenantId: tenantId),
+            NotificationType.Push => PushNotificationBuilder.Build(templateId: templateId, templateData: templateData, body: body, tenantId: tenantId),
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     }

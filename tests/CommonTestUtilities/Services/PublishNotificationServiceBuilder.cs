@@ -1,3 +1,4 @@
+using DotCruz.Notifications.Application.Common.Interfaces;
 using DotCruz.Notifications.Domain.Interfaces;
 using Moq;
 
