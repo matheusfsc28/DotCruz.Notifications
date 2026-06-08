@@ -22,7 +22,7 @@ public static class DependencyInjection
     public static void AddAwsSettings(IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<AwsSettings>(
-            configuration.GetSection("Settings:AwsSettings")
+            configuration.GetSection("Settings:AWS")
         );
     }
 }
