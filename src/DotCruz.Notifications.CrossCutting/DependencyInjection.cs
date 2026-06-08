@@ -1,4 +1,4 @@
-﻿using DotCruz.Notifications.CrossCutting.Settings;
+using DotCruz.Notifications.CrossCutting.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,16 +8,8 @@ public static class DependencyInjection
 {
     public static void AddCrossCutting(this IServiceCollection services, IConfiguration configuration)
     {
-        AddRabbitMqSettings(services, configuration);
         AddMongoDbSettings(services, configuration);
-        AddEmailSettings(services, configuration);
-    }
-
-    private static void AddRabbitMqSettings(IServiceCollection services, IConfiguration configuration)
-    {
-        services.Configure<RabbitMqSettings>(
-            configuration.GetSection("Settings:RabbitMqSettings")
-        );
+        AddAwsSettings(services, configuration);
     }
 
     private static void AddMongoDbSettings(IServiceCollection services, IConfiguration configuration)
@@ -27,10 +19,10 @@ public static class DependencyInjection
         );
     }
 
-    private static void AddEmailSettings(IServiceCollection services, IConfiguration configuration)
+    public static void AddAwsSettings(IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<EmailSettings>(
-            configuration.GetSection("Settings:EmailSettings")
+        services.Configure<AwsSettings>(
+            configuration.GetSection("Settings:AwsSettings")
         );
     }
 }
