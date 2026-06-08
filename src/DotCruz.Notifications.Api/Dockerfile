@@ -12,7 +12,6 @@ COPY ["src/DotCruz.Notifications.Application/DotCruz.Notifications.Application.c
 COPY ["src/DotCruz.Notifications.Domain/DotCruz.Notifications.Domain.csproj", "src/DotCruz.Notifications.Domain/"]
 COPY ["src/DotCruz.Notifications.Infrastructure/DotCruz.Notifications.Infrastructure.csproj", "src/DotCruz.Notifications.Infrastructure/"]
 COPY ["src/DotCruz.Notifications.CrossCutting/DotCruz.Notifications.CrossCutting.csproj", "src/DotCruz.Notifications.CrossCutting/"]
-COPY ["src/DotCruz.Notifications.Exceptions/DotCruz.Notifications.Exceptions.csproj", "src/DotCruz.Notifications.Exceptions/"]
 RUN dotnet restore "./src/DotCruz.Notifications.Api/DotCruz.Notifications.Api.csproj"
 COPY . .
 WORKDIR "/src/src/DotCruz.Notifications.Api"
