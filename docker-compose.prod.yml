@@ -11,8 +11,8 @@ services:
       - ConnectionStrings__MongoDb=${MONGO_CONNECTION_STRING}
       - Settings__MongoDbSettings__DatabaseName=${MONGO_DATABASE_NAME}
       - Settings__AWS__Region=${AWS_REGION}
-      - Settings__AWS__AccessKey=${AWS_ACCESS_KEY}
-      - Settings__AWS__SecretKey=${AWS_SECRET_KEY}
+      - Settings__AWS__AccessKey=${AWS_ACCESS_KEY_ID_VPS}
+      - Settings__AWS__SecretKey=${AWS_SECRET_ACCESS_KEY_VPS}
       - Settings__AWS__SqsQueueArn=${AWS_SQS_QUEUE_ARN}
       - Settings__AWS__SchedulerRoleArn=${AWS_SCHEDULER_ROLE_ARN}
       - Settings__AWS__SmtpParameterPath=${AWS_SMTP_PARAMETER_PATH}

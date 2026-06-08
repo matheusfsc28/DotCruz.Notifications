@@ -84,8 +84,8 @@ jobs:
             MONGO_CONNECTION_STRING=${{ secrets.MONGO_CONNECTION_STRING }}
             MONGO_DATABASE_NAME=${{ secrets.MONGO_DATABASE_NAME }}
             AWS_REGION=${{ secrets.AWS_REGION }}
-            AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}
-            AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}
+            AWS_ACCESS_KEY_ID_VPS=${{ secrets.AWS_ACCESS_KEY_ID_VPS }}
+            AWS_SECRET_ACCESS_KEY_VPS=${{ secrets.AWS_SECRET_ACCESS_KEY_VPS }}
             AWS_SQS_QUEUE_ARN=${{ secrets.AWS_SQS_QUEUE_ARN }}
             AWS_SCHEDULER_ROLE_ARN=${{ secrets.AWS_SCHEDULER_ROLE_ARN }}
             AWS_SMTP_PARAMETER_PATH=${{ secrets.AWS_SMTP_PARAMETER_PATH }}
