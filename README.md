@@ -1,122 +1,110 @@
-# 🚀 DotCruz Notifications
+# 🚀 DotCruz Notifications (API)
 
-![.NET 10](https://img.shields.io/badge/.NET-10.0-512bd4?style=for-the-badge&logo=dotnet)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![RabbitMQ](https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)
-![Clean Architecture](https://img.shields.io/badge/Architecture-Clean-blue?style=for-the-badge)
+DotCruz Notifications é o serviço central de mensageria e gestão de notificações do ecossistema **DotCruz**. Construído em **.NET 10** utilizando **Clean Architecture** e princípios de **Domain-Driven Design (DDD)**, ele atua como a interface administrativa e API de entrada para criação de templates de notificação e agendamentos de disparos.
 
-  DotCruz Notifications é um microserviço robusto de alta performance projetado para centralizar a gestão e o disparo de notificações
-  multiplataforma. Construído com as tecnologias mais recentes do ecossistema .NET, o sistema resolve o desafio de desacoplar o envio de
-  mensagens (E-mail, SMS, Push) da lógica de negócio principal dos demais serviços da organização.
+---
 
-## 💡 Por que este projeto?
+## ☁️ Arquitetura em Nuvem & Processamento
 
-  Em arquiteturas distribuídas, delegar o envio de notificações para um serviço especializado garante:
+O sistema adota uma arquitetura distribuída e assíncrona baseada em serviços nativos de nuvem (AWS), desacoplando a recepção das requisições na API principal do envio físico das mensagens:
 
-- **Resiliência:** Se um provedor de e-mail falhar, o sistema utiliza políticas de re-tentativa (Retry) e filas para garantir a entrega.
-- **Escalabilidade:** O processamento é feito em segundo plano (background), liberando a API para responder instantaneamente.
-- **Padronização:** Gerenciamento centralizado de templates com suporte a variáveis dinâmicas e internacionalização (i18n).
+### 1. Fila de Processamento (Amazon SQS)
+Todas as notificações enviadas imediatamente são publicadas como mensagens na fila **Amazon SQS**. Isso garante que o envio de mensagens seja assíncrono e resiliente, amortecendo picos de carga e permitindo retentativas em caso de falha.
+
+### 2. Agendamento Efêmero (AWS EventBridge Scheduler)
+Quando uma notificação é agendada para uma data futura, a API cria dinamicamente um agendamento de execução única no **AWS EventBridge Scheduler**. No instante configurado, o EventBridge encaminha a mensagem à fila SQS e se auto-destrói automaticamente (`ActionAfterCompletion.DELETE`), eliminando a necessidade de polling periódico em bancos de dados.
+
+### 3. Armazenamento Seguro de Credenciais (AWS SSM Parameter Store)
+As configurações de SMTP específicas de cada inquilino (*tenant*) são armazenadas com segurança no **SSM Parameter Store** como `SecureString`. Isso separa os segredos de conexão do banco de dados relacional principal e simplifica o gerenciamento multi-tenant.
+
+### 4. Worker Desacoplado (AWS Lambda)
+A leitura da fila SQS e a entrega real das notificações (E-mail, SMS, Push) não acontecem nesta API. Elas são de responsabilidade de um worker serverless otimizado compilado com Native AOT (consulte o repositório [DotCruz.Notifications.Delivery.Lambda](https://github.com/dotcruz-ecosystem/DotCruz.Notifications.Delivery.Lambda)).
+
+---
 
 ## 🛠️ Stack Tecnológica & Padrões
 
-- **Framework:** .NET 10 (C#)
-- **Mensageria:** RabbitMQ + MassTransit
-- **Persistência:** MongoDB (Driver 3.8.0)
-- **Arquitetura:** Clean Architecture + DDD (Domain Driven Design)
-- **Padrões de Projeto:**
-  - Strategy Pattern: Para seleção dinâmica de provedores de envio (Email, SMS, Push).
-  - Factory Strategy: Para criação de notificações baseada no tipo solicitado.
-  - MediatR: Para implementação de CQRS e desacoplamento de eventos.
-  - Polly: Políticas de retry incremental integradas ao MassTransit.
+*   **Framework**: .NET 10 (C#)
+*   **Persistência**: MongoDB (Driver 3.x)
+*   **Infraestrutura de Mensageria**: AWS SQS (Simple Queue Service)
+*   **Agendamento de Eventos**: AWS EventBridge Scheduler
+*   **Armazenamento de Segredos**: AWS Systems Manager (SSM) Parameter Store
+*   **Padrões de Projeto**:
+    *   **CQRS (MediatR)**: Separação clara de comandos e consultas.
+    *   **Clean Architecture**: Desacoplamento rígido de dependências de infraestrutura por meio de interfaces.
+    *   **Domain-Driven Design (DDD)**: Domínio rico com entidades, objetos de valor e conceitos de agregados.
 
-## 🏗️ Estrutura do Ecossistema
+---
 
-  O projeto é dividido em dois motores principais:
+## 🏗️ Estrutura do Projeto
 
-   1. **API (DotCruz.Notifications.Api):** Porta de entrada para cadastro de templates e comando inicial de disparo.
-   2. **Worker (DotCruz.Notifications.Worker):** O cérebro do sistema. Contém:
-       - Consumers: Processam as filas do RabbitMQ de forma assíncrona.
-       - ScheduledNotificationPoller: Um serviço de background que monitora e dispara notificações agendadas para o futuro.
+O código do projeto está dividido nos seguintes subprojetos dentro da pasta `src`:
 
-## 🚀 Como Executar (Zero Setup)
+*   **[DotCruz.Notifications.Api](./src/DotCruz.Notifications.Api)**: Camada de apresentação que contém os endpoints Scalar, controllers e configuração inicial do ASP.NET.
+*   **[DotCruz.Notifications.Application](./src/DotCruz.Notifications.Application)**: Regras de aplicação, Use Cases (envio, criação de templates, etc.) e interfaces de infraestrutura.
+*   **[DotCruz.Notifications.Domain](./src/DotCruz.Notifications.Domain)**: Entidades de domínio (Templates, Notifications, Tenants), enums e exceções.
+*   **[DotCruz.Notifications.Infrastructure](./src/DotCruz.Notifications.Infrastructure)**: Implementação de acesso a dados (MongoDB) e integrações de nuvem AWS (SQS, EventBridge Scheduler, SSM).
+*   **[DotCruz.Notifications.CrossCutting](./src/DotCruz.Notifications.CrossCutting)**: Recursos de injeção de dependência globais e mapeamento de configurações.
+*   **[DotCruz.Notifications.Contracts](./src/DotCruz.Notifications.Contracts)**: Modelos de mensagens e contratos compartilhados com outros microsserviços do ecossistema.
 
-  A única dependência para rodar o projeto completo é o Docker.
+---
 
-  1. Iniciar o ecossistema
-  Na raiz do projeto, execute:
+## 🚀 Como Executar em Desenvolvimento (Local Setup)
 
-```json
-  docker-compose up -d --build
-```
+Para rodar a API localmente, você precisa subir a instância do MongoDB e configurar os acessos necessários aos recursos da AWS (SQS, EventBridge Scheduler e SSM).
 
-  1. Acessar as Interfaces
-  Com o container rodando, você tem acesso imediato a:
+### Pré-requisitos
+*   Docker e Docker Compose instalados.
+*   Credenciais de acesso à AWS com permissões para SQS, EventBridge Scheduler e SSM.
 
-- **📄 Documentação da API (Scalar):**
-    <http://localhost:5050/scalar>
-    Explore e teste os endpoints de criação de notificações e templates de forma interativa.
+### Passo a Passo
 
-- **📧 Simulador de E-mail (Mailpit):**
-    <http://localhost:8030/>
-    Visualize em tempo real todos os e-mails disparados pelo sistema sem precisar de um servidor SMTP real.
+1.  **Iniciar o Banco de Dados Local**:
+    Na raiz do projeto, execute o comando para subir o MongoDB em segundo plano:
+    ```bash
+    docker compose up -d
+    ```
 
-- **🐰 RabbitMQ Dashboard:**
-    <http://localhost:15675/> (User/Pass: guest)
-    Acompanhe as filas e o fluxo de mensagens entre a API e o Worker.
-
-## 🛠️ Variáveis de Ambiente
-
-  O projeto já vem pré-configurado no docker-compose.yml, mas você pode customizar:
-
-- **ConnectionStrings__MongoDb:** Conexão com o banco de dados.
-- **Settings__RabbitMqSettings:** Configurações do broker.
-- **Settings__ApiKey:** Chave de autenticação para os serviços.
-
-## 🧪 Configuração para Testes Locais
-
-  Para executar os testes automatizados que dependem da infraestrutura Docker (Testes de Integração/API), você deve criar o arquivo de
-  configuração de ambiente na raiz do projeto DotCruz.Notifications.Api.
-
-  1. Criar o arquivo appsettings.Test.json
-  Local: src/DotCruz.Notifications.Api/appsettings.Test.json
-
-```json
-{
-  "ConnectionStrings": {
-    "MongoDb": "mongodb://localhost:27020"
-  },
-  "Settings": {
-    "ApiKey": "DotCruzNotificationsKey",
-    "EmailSettings": {
-      "Host": "localhost",
-      "Port": 1030,
-        "Username": "",
-        "Password": "",
-        "FromEmail": "nao-responda@dotcruz.com",
-        "FromName": "DotCruz Notifications",
-        "EnableSsl": false
+2.  **Configurar Variáveis de Ambiente / Configurações Locais**:
+    Ao rodar a API localmente (através do VS Code, Visual Studio ou via CLI `dotnet run`), configure as variáveis de ambiente necessárias para conexão com o MongoDB local e com a AWS (ou configure-as no seu gerenciador de User Secrets do .NET):
+    ```json
+    {
+      "ConnectionStrings": {
+        "MongoDb": "mongodb://localhost:27020"
       },
-      "MongoDbSettings": {
-        "DatabaseName": "NotificationsDb"
-      },
-      "RabbitMqSettings": {
-        "Host": "localhost",
-        "Port": 5675,
-        "Username": "guest",
-        "Password": "guest"
+      "Settings": {
+        "ApiKey": "DotCruzNotificationsKey",
+        "AWS": {
+          "Region": "us-east-1",
+          "AccessKey": "SUA_ACCESS_KEY",
+          "SecretKey": "SUA_SECRET_KEY",
+          "SqsQueueArn": "arn:aws:sqs:us-east-1:123456789012:sua-fila",
+          "SchedulerRoleArn": "arn:aws:iam::123456789012:role/seu-role-do-scheduler",
+          "SmtpParameterPath": "/dotcruz/tenants/{0}/smtp-config"
+        }
       }
     }
-  }
-```
+    ```
 
-  > Nota: Utilizamos as portas 27020, 1030 e 5675 para que os testes rodando em sua máquina local consigam acessar os containers Docker
-  expostos.
+3.  **Acessar a Documentação da API (Scalar)**:
+    Com a API executando localmente, você poderá acessar a documentação interativa em:
+    *   **📄 Documentação da API (Scalar)**: `http://localhost:5050/scalar`
 
-  1. Rodar os testes
+---
 
-```json
-dotnet test
-```
+## 🔄 Deploy Contínuo (CI/CD)
 
-  ---
-  Desenvolvido por Matheus Cruz – Focado em escalabilidade e sistemas distribuídos.
+O projeto possui duas esteiras automatizadas de implantação via GitHub Actions:
+
+### 1. Implantação da API ([deploy.yml](./.github/workflows/deploy.yml))
+Acionado a cada push para a branch `main`:
+1.  Compila a imagem Docker a partir do [Dockerfile](./src/DotCruz.Notifications.Api/Dockerfile) e envia para o GitHub Container Registry (GHCR).
+2.  Acessa a VPS de produção via SSH.
+3.  Copia o [docker-compose.prod.yml](./docker-compose.prod.yml) para o servidor como `docker-compose.yml`.
+4.  Injeta as variáveis de ambiente necessárias (como credenciais AWS, chaves de API e strings de conexão Mongo) a partir do GitHub Secrets.
+5.  Executa `docker compose pull` e `docker compose up -d` para atualizar os contêineres sob a rede externa `dotcruz_net`.
+
+### 2. Publicação de Contratos ([publish-contracts.yml](./.github/workflows/publish-contracts.yml))
+Acionado quando há modificações na pasta de contratos:
+1.  Gera o pacote NuGet (.nupkg) do projeto [DotCruz.Notifications.Contracts](./src/DotCruz.Notifications.Contracts/DotCruz.Notifications.Contracts.csproj).
+2.  Publica o pacote no NuGet.org utilizando a chave de API fornecida em segredo.
